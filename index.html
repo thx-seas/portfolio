@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>seas — editor & motion artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #150f18;
+    --fg: #f5eef8;
+    --accent: #f7a8c4;
+    --accent2: #e06fa0;
+    --accent3: #c9b8f5;
+    --dim: #2e1e2e;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  ::selection { background: var(--accent); color: var(--bg); }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden; cursor: none;
+  }
+  .cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 14px var(--accent);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    position: fixed; width: 34px; height: 34px;
+    border: 1px solid rgba(247,168,196,0.45); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.35s cubic-bezier(.22,.68,0,1.2), height 0.35s cubic-bezier(.22,.68,0,1.2), border-color 0.3s;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.028; pointer-events: none; z-index: 9000;
+    animation: noiseShift 0.12s steps(1) infinite;
+  }
+  @keyframes noiseShift {
+    0%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}
+    50%{transform:translate(1px,-1px)}75%{transform:translate(2px,0)}100%{transform:translate(0,2px)}
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.3rem 3rem;
+    border-bottom: 1px solid rgba(247,168,196,0.07);
+    backdrop-filter: blur(16px);
+    background: rgba(21,15,24,0.6);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+    letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--fg); text-decoration: none; font-size: 0.6rem;
+    letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.4;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--accent); }
+  .nav-status {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.55rem; letter-spacing: 0.15em; opacity: 0.45; text-transform: uppercase;
+  }
+  .status-dot {
+    width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent); animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.1} }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 7rem 3rem 3rem;
+    position: relative; gap: 1rem; overflow: hidden;
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-3d-side {
+    position: relative; z-index: 2; height: 500px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #canvas-container { width: 500px; height: 500px; position: relative; }
+  #canvas-container canvas { width: 100%!important; height: 100%!important; display: block; }
+  .canvas-hint {
+    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    font-size: 0.46rem; letter-spacing: 0.22em; color: var(--accent);
+    opacity: 0.3; white-space: nowrap; pointer-events: none;
+  }
+  .hero-tag {
+    font-size: 0.58rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.6rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-tag::before { content:''; width:20px; height:1px; background:var(--accent); opacity:0.6; }
+  .hero-headline {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.95;
+    letter-spacing: -0.03em; opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero-headline .pink { color: var(--accent); }
+  .hero-headline .outline { -webkit-text-stroke: 1.5px rgba(247,168,196,0.28); color: transparent; }
+  .hero-sub-text {
+    margin-top: 1.8rem; font-size: 0.72rem; line-height: 1.9;
+    color: rgba(245,238,248,0.45); max-width: 340px;
+    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-sub-text em { color: var(--accent); font-style: normal; }
+  .hero-ctas {
+    margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s 0.65s forwards;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: var(--accent); color: var(--bg);
+    padding: 0.85rem 1.8rem; font-size: 0.62rem; letter-spacing: 0.2em;
+    text-transform: uppercase; text-decoration: none;
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 24px rgba(247,168,196,0.25);
+  }
+  .btn-primary:hover { background: var(--accent2); box-shadow: 0 0 36px rgba(224,111,160,0.4); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    border: 1px solid rgba(247,168,196,0.3); color: var(--accent);
+    padding: 0.85rem 1.8rem; font-size: 0.62rem; letter-spacing: 0.2em;
+    text-transform: uppercase; text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); background: rgba(247,168,196,0.06); }
+  .hero-scroll {
+    position: absolute; bottom: 2rem; left: 3rem; font-size: 0.5rem;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(245,238,248,0.18); z-index: 2;
+    opacity: 0; animation: fadeUp 0.8s 1s forwards;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-scroll::after {
+    content:''; width:1px; height:40px;
+    background: linear-gradient(to bottom, rgba(247,168,196,0.35), transparent);
+    display: inline-block;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MARQUEE */
+  #software {
+    padding: 3rem 0;
+    border-top: 1px solid var(--dim); border-bottom: 1px solid var(--dim);
+    overflow: hidden; position: relative;
+  }
+  #software::before, #software::after {
+    content:''; position:absolute; top:0; bottom:0; width:120px; z-index:2; pointer-events:none;
+  }
+  #software::before { left:0; background:linear-gradient(to right, var(--bg), transparent); }
+  #software::after  { right:0; background:linear-gradient(to left,  var(--bg), transparent); }
+  .marquee-track {
+    display:flex; gap:1.5rem; white-space:nowrap;
+    animation: marquee 28s linear infinite; width:max-content;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .software-pill {
+    display:inline-flex; align-items:center; gap:0.6rem;
+    padding:0.5rem 1.2rem; border:1px solid rgba(247,168,196,0.12);
+    border-radius:100px; font-size:0.6rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:rgba(245,238,248,0.5);
+    transition:border-color 0.3s,color 0.3s,background 0.3s; cursor:default;
+  }
+  .software-pill:hover { border-color:var(--accent); color:var(--accent); background:rgba(247,168,196,0.05); }
+  .software-pill .dot { width:4px; height:4px; background:rgba(247,168,196,0.3); border-radius:50%; }
+  .software-pill.learning { border-style:dashed; border-color:rgba(201,184,245,0.15); }
+  .software-pill.learning .dot { background:var(--accent3); opacity:0.5; }
+  .software-pill.learning:hover { border-color:var(--accent3); color:var(--accent3); }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; position: relative; }
+  .section-label {
+    font-size:0.5rem; letter-spacing:0.45em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:2.5rem;
+    display:flex; align-items:center; gap:0.8rem; opacity:0.7;
+  }
+  .section-label::before { content:''; width:18px; height:1px; background:var(--accent); }
+
+  #about {
+    display:grid; grid-template-columns:1.2fr 1fr;
+    gap:6rem; border-top:1px solid var(--dim);
+  }
+  .about-text {
+    font-family:'Syne',sans-serif; font-size:1.05rem; line-height:1.75;
+    color:rgba(245,238,248,0.55); font-weight:400;
+  }
+  .about-text strong { color:var(--fg); }
+  .about-text em { color:var(--accent); font-style:normal; }
+  .about-stats { display:flex; flex-direction:column; gap:2.5rem; justify-content:center; }
+  .stat-item { border-left:2px solid var(--accent); padding-left:1.5rem; }
+  .stat-num { font-family:'Syne',sans-serif; font-size:2.8rem; font-weight:800; line-height:1; color:var(--accent); }
+  .stat-label { font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,238,248,0.3); margin-top:0.4rem; }
+
+  #links { border-top:1px solid var(--dim); }
+  .links-heading {
+    font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.8rem);
+    font-weight:800; line-height:1; letter-spacing:-0.02em; margin-bottom:3.5rem;
+  }
+  .links-heading span { color:var(--accent); }
+  .link-list { display:flex; flex-direction:column; }
+  .link-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.3rem 0; border-bottom:1px solid var(--dim);
+    text-decoration:none; color:var(--fg); position:relative;
+    overflow:hidden; transition:padding-left 0.35s ease;
+  }
+  .link-item::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:0;
+    background:linear-gradient(to right, rgba(247,168,196,0.07), transparent);
+    transition:width 0.4s ease;
+  }
+  .link-item:hover { padding-left:0.8rem; }
+  .link-item:hover::before { width:100%; }
+  .link-left { display:flex; align-items:center; gap:1.5rem; }
+  .link-icon { font-size:0.75rem; color:var(--accent); width:20px; text-align:center; opacity:0.7; }
+  .link-name { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:-0.01em; }
+  .link-handle { font-size:0.55rem; letter-spacing:0.1em; color:rgba(245,238,248,0.3); margin-top:0.1rem; }
+  .link-arrow { font-size:0.8rem; color:var(--accent); opacity:0; transform:translateX(-8px); transition:opacity 0.25s,transform 0.25s; }
+  .link-item:hover .link-arrow { opacity:1; transform:translateX(0); }
+
+  /* COMMISSION */
+  #commission {
+    position:relative; overflow:hidden;
+    background:linear-gradient(135deg,#1f0d1f 0%,#180a1e 50%,#100810 100%);
+    border-top:1px solid var(--dim); padding:6rem 3rem;
+  }
+  #commission::before {
+    content:''; position:absolute; top:-50%; left:-20%; width:600px; height:600px;
+    background:radial-gradient(circle,rgba(247,168,196,0.09) 0%,transparent 60%); pointer-events:none;
+  }
+  #commission::after {
+    content:''; position:absolute; bottom:-30%; right:-10%; width:400px; height:400px;
+    background:radial-gradient(circle,rgba(201,184,245,0.07) 0%,transparent 60%); pointer-events:none;
+  }
+  .comm-inner { position:relative; z-index:1; }
+  .comm-label { font-size:0.55rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--accent); opacity:0.6; margin-bottom:1rem; }
+  .comm-title {
+    font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,5rem);
+    font-weight:800; line-height:0.95; letter-spacing:-0.03em; margin-bottom:0.8rem;
+  }
+  .comm-title .pink { color:var(--accent); }
+  .comm-sub { font-size:0.68rem; color:rgba(245,238,248,0.35); margin-bottom:2.5rem; letter-spacing:0.05em; }
+  .comm-cta {
+    display:inline-flex; align-items:center; gap:0.8rem;
+    background:var(--accent); color:var(--bg);
+    padding:1rem 2.2rem; font-size:0.65rem; letter-spacing:0.2em;
+    text-transform:uppercase; text-decoration:none;
+    font-family:'Space Mono',monospace; font-weight:700; border-radius:2px;
+    transition:background 0.2s,box-shadow 0.2s;
+    box-shadow:0 0 30px rgba(247,168,196,0.2);
+  }
+  .comm-cta:hover { background:var(--accent2); box-shadow:0 0 40px rgba(224,111,160,0.35); }
+
+  footer {
+    padding:2.5rem 3rem; border-top:1px solid var(--dim);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:0.5rem; letter-spacing:0.15em; text-transform:uppercase;
+    color:rgba(245,238,248,0.18);
+  }
+  footer span { color:var(--accent); opacity:0.6; }
+  .vert-text {
+    position:fixed; right:1.8rem; top:50%;
+    transform:translateY(-50%) rotate(90deg);
+    font-size:0.45rem; letter-spacing:0.4em; text-transform:uppercase;
+    color:rgba(245,238,248,0.07); pointer-events:none; z-index:50;
+  }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s,transform 0.7s; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  @media(max-width:900px){
+    #hero{grid-template-columns:1fr}
+    .hero-3d-side{height:320px;order:-1}
+    #canvas-container{width:320px;height:320px}
+    nav{padding:1.1rem 1.5rem}
+    .nav-links{display:none}
+    section{padding:4rem 1.5rem}
+    #about{grid-template-columns:1fr;gap:3rem}
+    footer{flex-direction:column;gap:1rem;text-align:center}
+    .vert-text{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="vert-text">seas.portfolio — 2024</div>
+
+<nav>
+  <div class="nav-logo">seas</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#links">Links</a></li>
+    <li><a href="#commission">Contact</a></li>
+  </ul>
+  <div class="nav-status"><div class="status-dot"></div>open for work</div>
+</nav>
+
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">✧ video editor & motion artist</div>
+    <h1 class="hero-headline">
+      making<br>
+      <span class="pink">things</span><br>
+      <span class="outline">move.</span>
+    </h1>
+    <p class="hero-sub-text">
+      17 y.o. editor. I live in <em>After Effects</em>, push<br>
+      pixels in Blender, and make sh** look good.<br>
+      at least i try.
+    </p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="https://t.me/s_3as" target="_blank">✦ message me on telegram</a>
+      <a class="btn-outline" href="#links">all links →</a>
+    </div>
+  </div>
+  <div class="hero-3d-side">
+    <div id="canvas-container">
+      <span class="canvas-hint">drag · scroll to zoom ✧</span>
+    </div>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<div id="software">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<section id="about">
+  <div>
+    <div class="section-label reveal">Who i am</div>
+    <p class="about-text reveal">
+      <strong>Hey.</strong> i'm seas — a 17-year-old video editor & motion artist. I care about the details nobody notices: the ease curve, the color grade, the frame that hits just right.
+      <br><br>
+      <em>After Effects</em> is home. Blender is where i get lost. Everything else is still on the learning list — and the list keeps growing.
+    </p>
+  </div>
+  <div class="about-stats">
+    <div class="stat-item reveal"><div class="stat-num">10+</div><div class="stat-label">Softwares</div></div>
+    <div class="stat-item reveal"><div class="stat-num">17</div><div class="stat-label">Years old</div></div>
+    <div class="stat-item reveal"><div class="stat-num">∞</div><div class="stat-label">Frames exported at 3am</div></div>
+  </div>
+</section>
+
+<section id="links">
+  <div class="section-label reveal">Find me</div>
+  <h2 class="links-heading reveal">My <span>links</span>.</h2>
+  <div class="link-list">
+    <a class="link-item reveal" href="https://www.fiverr.com/s/gDZ0PNE" target="_blank">
+      <div class="link-left"><div class="link-icon">✦</div><div><div class="link-name">Fiverr</div><div class="link-handle">hire me for projects</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://ko-fi.com/seas" target="_blank">
+      <div class="link-left"><div class="link-icon">⌬</div><div><div class="link-name">Ko-Fi Shop</div><div class="link-handle">ko-fi.com/seas</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://boosty.to/seas" target="_blank">
+      <div class="link-left"><div class="link-icon">⟐</div><div><div class="link-name">Boosty</div><div class="link-handle">boosty.to/seas</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://www.youtube.com/@thx_seas" target="_blank">
+      <div class="link-left"><div class="link-icon">✪</div><div><div class="link-name">YouTube</div><div class="link-handle">@thx_seas</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://www.tiktok.com/@thx.seas" target="_blank">
+      <div class="link-left"><div class="link-icon">✧</div><div><div class="link-name">TikTok</div><div class="link-handle">@thx.seas</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://www.instagram.com/thx_seas" target="_blank">
+      <div class="link-left"><div class="link-icon">⟐</div><div><div class="link-name">Instagram</div><div class="link-handle">@thx_seas</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a class="link-item reveal" href="https://t.me/tyses" target="_blank">
+      <div class="link-left"><div class="link-icon">◈</div><div><div class="link-name">Telegram Channel</div><div class="link-handle">@tyses</div></div></div>
+      <div class="link-arrow">→</div>
+    </a>
+    <div class="link-item reveal" id="discordItem" style="cursor:pointer;">
+      <div class="link-left"><div class="link-icon">◈</div><div><div class="link-name">Discord</div><div class="link-handle">._.seas</div></div></div>
+      <div class="link-arrow" id="discordArrow" style="opacity:0.35;transform:none;">copy</div>
+    </div>
+  </div>
+</section>
+
+<div id="commission">
+  <div class="comm-inner">
+    <div class="comm-label">✧ commissions open</div>
+    <h2 class="comm-title">Lets make<br>something <span class="pink">cool.</span></h2>
+    <p class="comm-sub">dm me — i don't bite</p>
+    <a class="comm-cta" href="https://t.me/s_3as" target="_blank">message on telegram →</a>
+  </div>
+</div>
+
+<footer>
+  <div>© seas — 2024</div>
+  <div>tg <span>@s_3as</span></div>
+  <div>made with render pain</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════
+//  COMPLEX GEOMETRIC CRYSTAL — shape-style 3D
+// ═══════════════════════════════════════════════
+const container = document.getElementById('canvas-container');
+let W = container.offsetWidth, H = container.offsetHeight;
+
+const scene    = new THREE.Scene();
+const camera   = new THREE.PerspectiveCamera(45, W / H, 0.1, 200);
+camera.position.set(0, 0, 5.2);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W, H);
+renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true;
+container.appendChild(renderer.domElement);
+
+// ── LIGHTS ──────────────────────────────────────
+const ambient = new THREE.AmbientLight(0xffeeff, 0.18);
+scene.add(ambient);
+
+const sunLight = new THREE.DirectionalLight(0xf7c8d8, 2.4);
+sunLight.position.set(4, 3, 5);
+sunLight.castShadow = true;
+scene.add(sunLight);
+
+const rimLight = new THREE.PointLight(0xc9b8f5, 2.2, 14);
+rimLight.position.set(-3, -1, -2);
+scene.add(rimLight);
+
+const pinkFill = new THREE.PointLight(0xf7a8c4, 1.2, 10);
+pinkFill.position.set(0, 3, 1);
+scene.add(pinkFill);
+
+// ── PLANET GROUP ────────────────────────────────
+const planetGroup = new THREE.Group();
+scene.add(planetGroup);
+
+// --- Surface sphere (high poly) ---
+const surfaceGeo = new THREE.SphereGeometry(1.0, 128, 128);
+
+// Procedural vertex displacement for terrain bumps
+const posArr = surfaceGeo.attributes.position;
+for (let i = 0; i < posArr.count; i++) {
+  const x = posArr.getX(i), y = posArr.getY(i), z = posArr.getZ(i);
+  // multi-octave noise-like displacement
+  const n1 = Math.sin(x * 7.3 + y * 5.1) * Math.cos(z * 6.7 + x * 4.2);
+  const n2 = Math.sin(y * 11.1 + z * 8.3) * Math.cos(x * 9.7 + z * 3.1);
+  const n3 = Math.cos(x * 15.2 + y * 12.4) * Math.sin(z * 13.8 + x * 7.6);
+  const disp = (n1 * 0.025 + n2 * 0.015 + n3 * 0.008);
+  const nx = x + x * disp, ny = y + y * disp, nz = z + z * disp;
+  posArr.setXYZ(i, nx, ny, nz);
+}
+surfaceGeo.computeVertexNormals();
+
+const surfaceMat = new THREE.MeshPhongMaterial({
+  color:     0xd4709a,
+  emissive:  0x2a0820,
+  specular:  0xffc8e8,
+  shininess: 55,
+  flatShading: false,
+});
+const planet = new THREE.Mesh(surfaceGeo, surfaceMat);
+planet.receiveShadow = true;
+planet.castShadow    = true;
+planetGroup.add(planet);
+
+// --- Latitude / longitude grid overlay ---
+const gridMat = new THREE.MeshBasicMaterial({
+  color: 0xf7a8c4, wireframe: true,
+  transparent: true, opacity: 0.055,
+});
+const gridGeo = new THREE.SphereGeometry(1.012, 24, 16);
+planetGroup.add(new THREE.Mesh(gridGeo, gridMat));
+
+// --- Glowing atmosphere (inner) ---
+const atmoInnerGeo = new THREE.SphereGeometry(1.035, 64, 64);
+const atmoInnerMat = new THREE.MeshPhongMaterial({
+  color: 0xf7a8c4, transparent: true, opacity: 0.07,
+  side: THREE.FrontSide, depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+planetGroup.add(new THREE.Mesh(atmoInnerGeo, atmoInnerMat));
+
+// --- Atmosphere halo (outer) ---
+const atmoGeo = new THREE.SphereGeometry(1.18, 64, 64);
+const atmoMat = new THREE.MeshPhongMaterial({
+  color: 0xe890bb, transparent: true, opacity: 0.055,
+  side: THREE.BackSide, depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+planetGroup.add(new THREE.Mesh(atmoGeo, atmoMat));
+
+// --- Wide glow shell ---
+const glowGeo = new THREE.SphereGeometry(1.42, 32, 32);
+const glowMat = new THREE.MeshBasicMaterial({
+  color: 0xf7a8c4, transparent: true, opacity: 0.028,
+  side: THREE.BackSide, depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+planetGroup.add(new THREE.Mesh(glowGeo, glowMat));
+
+// --- Cloud layer ---
+const cloudGeo = new THREE.SphereGeometry(1.022, 64, 64);
+// Build "cloud patches" via per-vertex alpha trick via geometry colors
+const cloudColors = new Float32Array(cloudGeo.attributes.position.count * 3);
+const cloudAlpha  = new Float32Array(cloudGeo.attributes.position.count);
+const cpArr = cloudGeo.attributes.position;
+for (let i = 0; i < cpArr.count; i++) {
+  const x = cpArr.getX(i), y = cpArr.getY(i), z = cpArr.getZ(i);
+  const v = (Math.sin(x*8+y*5)*Math.cos(z*7+x*3) + 1) / 2;
+  cloudColors[i*3]=1; cloudColors[i*3+1]=0.9; cloudColors[i*3+2]=0.95;
+  cloudAlpha[i] = v > 0.62 ? (v-0.62)*2.5 : 0;
+}
+cloudGeo.setAttribute('color', new THREE.BufferAttribute(cloudColors, 3));
+const cloudMat = new THREE.MeshPhongMaterial({
+  vertexColors: true, transparent: true, opacity: 0.22,
+  depthWrite: false, blending: THREE.NormalBlending,
+});
+const clouds = new THREE.Mesh(cloudGeo, cloudMat);
+planetGroup.add(clouds);
+
+// ── RINGS ────────────────────────────────────────
+const ringGroup = new THREE.Group();
+planetGroup.add(ringGroup);
+
+function makeRing(innerR, outerR, color, opacity, tiltX, tiltZ) {
+  // Ring as flat torus with low tube radius
+  const geo = new THREE.TorusGeometry((innerR+outerR)/2, (outerR-innerR)/2, 3, 200);
+  const mat = new THREE.MeshBasicMaterial({
+    color, transparent: true, opacity,
+    side: THREE.DoubleSide, depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.x = tiltX;
+  mesh.rotation.z = tiltZ;
+  return mesh;
+}
+
+const ring1 = makeRing(1.38, 1.65, 0xf7a8c4, 0.28, Math.PI/2.1, 0.18);
+const ring2 = makeRing(1.68, 1.82, 0xc9b8f5, 0.16, Math.PI/2.1, 0.18);
+const ring3 = makeRing(1.85, 1.94, 0xf7a8c4, 0.10, Math.PI/2.1, 0.18);
+ringGroup.add(ring1, ring2, ring3);
+
+// ── ORBITING MOON ────────────────────────────────
+const moonOrbit = new THREE.Group();
+scene.add(moonOrbit);
+
+const moonGeo = new THREE.SphereGeometry(0.13, 32, 32);
+// Displace moon surface too
+const moonPos = moonGeo.attributes.position;
+for (let i = 0; i < moonPos.count; i++) {
+  const mx2 = moonPos.getX(i), my2 = moonPos.getY(i), mz2 = moonPos.getZ(i);
+  const d = Math.sin(mx2*18+my2*14)*0.018;
+  moonPos.setXYZ(i, mx2+mx2*d, my2+my2*d, mz2+mz2*d);
+}
+moonGeo.computeVertexNormals();
+const moonMat = new THREE.MeshPhongMaterial({
+  color: 0xc9b8f5, emissive: 0x1a0b2e, specular: 0xffeeff, shininess: 30,
+});
+const moon = new THREE.Mesh(moonGeo, moonMat);
+moon.position.set(2.1, 0.4, 0);
+moonOrbit.add(moon);
+
+// Moon glow
+const moonGlowGeo = new THREE.SphereGeometry(0.19, 16, 16);
+const moonGlowMat = new THREE.MeshBasicMaterial({
+  color: 0xc9b8f5, transparent: true, opacity: 0.08,
+  side: THREE.BackSide, blending: THREE.AdditiveBlending,
+});
+moon.add(new THREE.Mesh(moonGlowGeo, moonGlowMat));
+
+// ── STAR FIELD ───────────────────────────────────
+const starGeo = new THREE.BufferGeometry();
+const starCount = 420;
+const starPos = new Float32Array(starCount * 3);
+for (let i = 0; i < starCount; i++) {
+  const r = 7 + Math.random() * 8;
+  const th = Math.random() * Math.PI * 2;
+  const ph = Math.random() * Math.PI;
+  starPos[i*3]   = r * Math.sin(ph) * Math.cos(th);
+  starPos[i*3+1] = r * Math.sin(ph) * Math.sin(th);
+  starPos[i*3+2] = r * Math.cos(ph);
+}
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+  color: 0xffeeff, size: 0.032, transparent: true, opacity: 0.6, sizeAttenuation: true,
+}));
+scene.add(stars);
+
+// Dust ring around star field
+const dustGeo = new THREE.BufferGeometry();
+const dustCount = 180;
+const dustPos = new Float32Array(dustCount * 3);
+for (let i = 0; i < dustCount; i++) {
+  const r = 3.2 + Math.random() * 1.5;
+  const th = Math.random() * Math.PI * 2;
+  dustPos[i*3]   = r * Math.cos(th);
+  dustPos[i*3+1] = (Math.random() - 0.5) * 0.3;
+  dustPos[i*3+2] = r * Math.sin(th);
+}
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+scene.add(new THREE.Points(dustGeo, new THREE.PointsMaterial({
+  color: 0xf7a8c4, size: 0.018, transparent: true, opacity: 0.25, sizeAttenuation: true,
+})));
+
+// ── INTERACTION ──────────────────────────────────
+let isDrag   = false;
+let prevMX = 0, prevMY = 0;
+let velX = 0, velY = 0;
+let tRotX = 0.3, tRotY = 0;
+let cRotX = 0.3, cRotY = 0;
+let zoomTarget = 5.2, zoomCurrent = 5.2;
+let hovered = false;
+
+renderer.domElement.addEventListener('mouseenter', () => { hovered = true; });
+renderer.domElement.addEventListener('mouseleave', () => { hovered = false; isDrag = false; });
+
+renderer.domElement.addEventListener('mousedown', e => {
+  isDrag = true; prevMX = e.clientX; prevMY = e.clientY; velX = 0; velY = 0;
+  renderer.domElement.style.cursor = 'grabbing';
+});
+window.addEventListener('mousemove', e => {
+  if (!isDrag) return;
+  const dx = e.clientX - prevMX, dy = e.clientY - prevMY;
+  velY = dx * 0.007; velX = dy * 0.007;
+  tRotX += velX; tRotY += velY;
+  prevMX = e.clientX; prevMY = e.clientY;
+});
+window.addEventListener('mouseup', () => {
+  isDrag = false;
+  renderer.domElement.style.cursor = 'grab';
+});
+renderer.domElement.style.cursor = 'grab';
+
+// Scroll to zoom
+renderer.domElement.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoomTarget = Math.max(2.8, Math.min(8.5, zoomTarget + e.deltaY * 0.007));
+}, { passive: false });
+
+// Touch
+renderer.domElement.addEventListener('touchstart', e => {
+  isDrag = true; prevMX = e.touches[0].clientX; prevMY = e.touches[0].clientY;
+});
+renderer.domElement.addEventListener('touchmove', e => {
+  if (!isDrag) return;
+  tRotX += (e.touches[0].clientY - prevMY) * 0.007;
+  tRotY += (e.touches[0].clientX - prevMX) * 0.007;
+  prevMX = e.touches[0].clientX; prevMY = e.touches[0].clientY;
+});
+renderer.domElement.addEventListener('touchend', () => { isDrag = false; });
+
+// ── ANIMATE ──────────────────────────────────────
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.008;
+
+  // Auto-rotate when not dragging
+  if (!isDrag) {
+    velX *= 0.94; velY *= 0.94;
+    tRotY += (hovered ? 0.002 : 0.003);
+    tRotX += Math.sin(t * 0.2) * 0.0008;
+    tRotX += velX; tRotY += velY;
+    // Dampen X to prevent flipping
+    tRotX = tRotX * 0.97 + 0.18 * 0.03;
+  }
+
+  // Smooth rotation
+  cRotX += (tRotX - cRotX) * 0.055;
+  cRotY += (tRotY - cRotY) * 0.055;
+  planetGroup.rotation.x = cRotX;
+  planetGroup.rotation.y = cRotY;
+
+  // Cloud drift
+  clouds.rotation.y += 0.0006;
+  clouds.rotation.x += 0.0001;
+
+  // Moon orbit
+  moonOrbit.rotation.y += 0.007;
+  moonOrbit.rotation.x = Math.sin(t * 0.3) * 0.12;
+
+  // Ring pulse / slight wobble
+  const rs = 1 + Math.sin(t * 0.8) * 0.008;
+  ringGroup.scale.set(rs, rs, rs);
+  ringGroup.rotation.z = Math.sin(t * 0.15) * 0.04;
+
+  // Atmospheric shimmer
+  atmoInnerMat.opacity = 0.06 + Math.sin(t * 1.5) * 0.015;
+  glowMat.opacity = 0.022 + Math.sin(t * 0.9) * 0.008;
+
+  // Light animation
+  pinkFill.position.x = Math.sin(t * 0.5) * 2.5;
+  pinkFill.position.z = Math.cos(t * 0.4) * 1.5;
+  rimLight.intensity = 2.0 + Math.sin(t * 1.1) * 0.4;
+
+  // Star slow spin
+  stars.rotation.y += 0.0004;
+
+  // Zoom
+  zoomCurrent += (zoomTarget - zoomCurrent) * 0.07;
+  camera.position.z = zoomCurrent;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  W = container.offsetWidth; H = container.offsetHeight;
+  renderer.setSize(W, H); camera.aspect = W / H; camera.updateProjectionMatrix();
+});
+
+// ── MARQUEE ──────────────────────────────────────
+const sw = [
+  {n:'After Effects',l:false},{n:'Blender',l:false},{n:'Premiere Pro',l:true},
+  {n:'DaVinci Resolve',l:true},{n:'Photoshop',l:true},{n:'Figma',l:true},
+  {n:'NukeX Studio',l:true},{n:'Houdini',l:true},{n:'DAZ Studio',l:true},
+  {n:'Live2D',l:true},{n:'Spine',l:true},
+];
+const track = document.getElementById('marqueeTrack');
+[...sw,...sw,...sw,...sw].forEach(s => {
+  const el = document.createElement('div');
+  el.className = 'software-pill'+(s.l?' learning':'');
+  el.innerHTML = `<span class="dot"></span>${s.n}`;
+  track.appendChild(el);
+});
+
+// ── CURSOR ───────────────────────────────────────
+const cursorEl = document.getElementById('cursor');
+const ringEl   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursorEl.style.left=mx+'px'; cursorEl.style.top=my+'px';
+});
+(function animR(){
+  rx+=(mx-rx)*0.13; ry+=(my-ry)*0.13;
+  ringEl.style.left=rx+'px'; ringEl.style.top=ry+'px';
+  requestAnimationFrame(animR);
+})();
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter',()=>{ ringEl.style.width='56px'; ringEl.style.height='56px'; ringEl.style.borderColor='rgba(247,168,196,0.7)'; });
+  el.addEventListener('mouseleave',()=>{ ringEl.style.width='34px'; ringEl.style.height='34px'; ringEl.style.borderColor='rgba(247,168,196,0.45)'; });
+});
+
+// ── SCROLL REVEAL ────────────────────────────────
+const obs = new IntersectionObserver(es => es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── DISCORD COPY ─────────────────────────────────
+document.getElementById('discordItem').addEventListener('click', () => {
+  navigator.clipboard.writeText('._.seas').then(() => {
+    const a = document.getElementById('discordArrow');
+    a.textContent='copied ✓'; a.style.opacity='1';
+    setTimeout(()=>{ a.textContent='copy'; a.style.opacity='0.35'; }, 2000);
+  });
+});
+</script>
+</body>
+</html>
