@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seas — video editor &amp; motion designer</title>
-<meta name="description" content="Seas — video editor and motion designer from Kolomyia, Ukraine. Edits, motion design, AI-generative video, React graphics, color and 3D. Scroll to fly.">
+<meta name="description" content="Seas — video editor and motion designer from Kolomyia, Ukraine. Edits, motion design, AI-generative video, React graphics, color and 3D.">
 <meta property="og:title" content="Seas — video editor &amp; motion designer">
 <meta property="og:description" content="Edits, motion design, AI-generative video, React graphics, color and 3D. Kolomyia, UA — worldwide.">
 <meta name="theme-color" content="#EDEBE6">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EDEBE6'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%23141414' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23A8140D'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EDEBE6'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23141414' stroke-width='1.5'/%3E%3Ccircle cx='32' cy='32' r='13.6' fill='%238A0D08'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }</script>
 </head>
@@ -19,16 +19,18 @@
 
 <canvas id="ink" aria-hidden="true"></canvas>
 
-<header class="rail rail--top">
-  <a class="rail__brand" href="#cover" data-go="0">Seas</a>
-  <i class="rail__sep" aria-hidden="true">✦</i>
-  <span>Video editor &amp; motion designer</span>
-  <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-  <span class="hide-sm">Kolomyia, UA</span>
-  <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-  <span class="hide-sm">©2026</span>
-  <a class="rail__cta" href="https://t.me/s_3as" target="_blank" rel="noopener">Let's talk ↗</a>
+<header class="hud hud--top">
+  <a class="hud__brand" href="#cover" data-go="0">Seas</a>
+  <a class="hud__cta" href="https://t.me/s_3as" target="_blank" rel="noopener">Let's talk ↗</a>
 </header>
+
+<!--
+  Grid, wide artboard 1440×900: margin 96, 13 columns of 73.8, gutter 24.
+  Column x: 96 · 193.8 · 291.7 · 389.5 · 487.4 · 585.2 · 683.1 · 780.9 · 878.8 · 976.6 · 1074.5 · 1172.3 · 1270.2 → 1344
+  Split 8 | 5: 96–854.8 | 878.8–1344. Header rule 144 · content 168–732 · golden line 516.6 · footer rule 756.
+  Circles ÷φ: 287.5 · 232.6 · 188 · 143.8 · 88.9 · 54.9.  Type ×φ: 12 · 19 · 31 · 51 · 82 · 133 · 300 (display).
+  Tall artboard 390×760: margin 24, 5 columns, header rule 88 · content 112–676 · footer rule 700.
+-->
 
 <main class="stage" id="stage">
 
@@ -36,90 +38,59 @@
   <section class="poster" id="cover" aria-label="Seas — cover">
     <div class="sheet">
 
-      <div class="layer" data-d="-9">
+      <div class="layer" data-d="-12">
         <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <circle class="h" cx="1018" cy="404" r="250"/>
-          <circle class="h h2 dash" cx="1018" cy="404" r="300"/>
-          <path class="h" d="M722 520A318 318 0 0 1 970 90"/>
-          <path class="h thick" d="M700 330A334 334 0 0 1 792 170"/>
-          <path class="h hr" d="M1262 616A320 320 0 0 1 1110 710"/>
-          <line class="h h2" x1="640" y1="404" x2="1400" y2="404"/>
-          <circle class="ring" cx="1400" cy="404" r="3.5"/>
-          <line class="h h2" x1="1018" y1="96" x2="1018" y2="740"/>
-          <circle class="dotf" cx="1018" cy="96" r="2.5"/>
-          <text class="mt" x="1030" y="110">ø 500</text>
-          <line class="ruler" x1="660" y1="757" x2="1392" y2="757"/>
-          <line class="ruler ruler--major" x1="660" y1="754" x2="1392" y2="754"/>
-          <line class="h h2" x1="660" y1="761" x2="1392" y2="761"/>
-          <text class="mt" x="660" y="778">00:00:00:00</text>
-          <text class="mt" x="1296" y="778">00:00:14:12</text>
-          <g transform="translate(-676 -64)">
-            <rect class="h" x="1216" y="150" width="176" height="108.8"/>
-            <line class="h h2" x1="1324.8" y1="150" x2="1324.8" y2="258.8"/>
-            <line class="h h2" x1="1324.8" y1="217.2" x2="1392" y2="217.2"/>
-            <line class="h h2" x1="1350.4" y1="217.2" x2="1350.4" y2="258.8"/>
-            <path class="h" d="M1216 258.8A108.8 108.8 0 0 1 1324.8 150A67.2 67.2 0 0 1 1392 217.2A41.6 41.6 0 0 1 1350.4 258.8"/>
-            <text class="mt" x="1216" y="140">φ = 1.618</text>
-          </g>
+          <circle class="o" cx="1111.5" cy="400" r="232.6"/>
+          <circle class="o o--dash" cx="1111.5" cy="400" r="287.5"/>
+          <path class="o o--thick" d="M841.3 301.7A287.5 287.5 0 0 1 946.6 164.5"/>
+          <path class="o o--red" d="M1330.1 479.6A232.6 232.6 0 0 1 1227.8 601.4"/>
+          <line class="a" x1="824" y1="400" x2="1399" y2="400"/>
+          <line class="a" x1="1111.5" y1="112.5" x2="1111.5" y2="687.5"/>
+          <circle class="ring" cx="1399" cy="400" r="3.5"/>
+          <circle class="dotf" cx="1111.5" cy="112.5" r="2.5"/>
+          <text class="lbl" x="1123.5" y="126">ø 575</text>
         </svg>
         <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <circle class="h" cx="195" cy="210" r="140"/>
-          <circle class="h h2 dash" cx="195" cy="210" r="164"/>
-          <path class="h thick" d="M62 190A134 134 0 0 1 120 98"/>
-          <line class="h h2" x1="20" y1="210" x2="380" y2="210"/>
-          <circle class="ring" cx="380" cy="210" r="3"/>
+          <circle class="o" cx="195" cy="262" r="150"/>
+          <circle class="o o--dash" cx="195" cy="262" r="176"/>
+          <line class="a" x1="24" y1="262" x2="366" y2="262"/>
         </svg>
-        <p class="at fs hv outline echo" style="--x:700;--y:452;--fs:226;--tx:48;--ty:246;--tfs:94" aria-hidden="true">Seas</p>
+        <p class="at fs hv outline echo hide-tall" style="--x:96;--y:452;--fs:300" aria-hidden="true">Seas</p>
+      </div>
+
+      <div class="layer" data-d="-6">
+        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <defs><pattern id="ht-cw" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="3" class="dot"/></pattern></defs>
+          <circle cx="1111.5" cy="400" r="188" fill="url(#ht-cw)"/>
+          <circle class="disc" cx="1111.5" cy="400" r="143.8"/>
+        </svg>
+        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
+          <defs><pattern id="ht-ct" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.1" class="dot"/></pattern></defs>
+          <circle cx="195" cy="262" r="120" fill="url(#ht-ct)"/>
+          <circle class="disc" cx="195" cy="262" r="92.7"/>
+        </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <p class="at fs hv name" style="--x:672;--y:280;--fs:226;--tx:36;--ty:160;--tfs:100" aria-hidden="true">Seas</p>
-
-        <h1 class="at fs hv role" style="--x:148;--y:292;--fs:40;--tx:38;--ty:378;--tfs:25">
-          <span class="sr-only">Seas — </span>
-          <span>Video editor</span>
-          <span>&amp; motion designer</span>
-        </h1>
-        <p class="at fs mono meta" style="--x:150;--y:384;--fs:11;--tx:40;--ty:436;--tfs:9">
-          Kolomyia, UA <i>✦</i> Worldwide <i>✦</i> Since 2024
-        </p>
-
-        <span class="at fs hv asterisk" style="--x:146;--y:512;--fs:66;--tx:34;--ty:486;--tfs:40" aria-hidden="true">*</span>
-        <p class="at w fs pill" style="--x:228;--y:522;--w:468;--fs:11.5;--tx:80;--ty:492;--tw:276;--tfs:9.5">
+        <p class="at w fs role" style="--x:96;--y:204;--w:758.8;--fs:31;--tx:24;--ty:436;--tw:342;--tfs:19">Video editor &amp; motion designer</p>
+        <h1 class="at fs hv name" style="--x:84;--y:268;--fs:300;--tx:18;--ty:470;--tfs:136"><span class="sr-only">Seas — video editor &amp; motion designer</span><span aria-hidden="true">Seas</span></h1>
+        <p class="at w fs body" style="--x:878.8;--y:656;--w:465.2;--fs:19;--tx:24;--ty:604;--tw:342;--tfs:14">
           Every frame earns its place. Timing, easing, color — and the cut that lands exactly on the beat.
-        </p>
-
-        <p class="at fs mono credit" style="--x:150;--y:786;--fs:11;--tx:40;--ty:676;--tfs:9">
-          Selected work <b>2024 — 2026</b>
-        </p>
-        <p class="at fs mono credit ar" style="--x:1392;--y:786;--fs:11;--tx:352;--ty:676;--tfs:9">
-          Scroll <b>to fly</b> ↓
         </p>
       </div>
 
-      <div class="layer" data-d="5">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <line class="h hr" x1="104" y1="84" x2="104" y2="816"/>
-          <text class="mt" transform="translate(94 816) rotate(-90)">portfolio — vol. 05 — kolomyia, ua — mmxxvi</text>
-          <path class="h" d="M84 96V76H104"/><path class="h" d="M1356 76H1376V96"/>
-          <path class="h" d="M1376 804V824H1356"/><path class="h" d="M104 824H84V804"/>
-          <line class="h dot" x1="712" y1="566" x2="900" y2="566"/>
-          <circle class="ring" cx="906" cy="566" r="3.5"/>
-          <text class="mt" x="918" y="569">fig. 00 — statement</text>
-          <rect class="fill" x="640" y="214" width="9" height="9"/>
-          <rect class="fillr" x="1352" y="690" width="11" height="11"/>
-          <rect class="fill" x="1370" y="690" width="5" height="5"/>
-          <rect class="fill" x="150" y="700" width="6" height="6"/>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <line class="h hr" x1="22" y1="64" x2="22" y2="704"/>
-          <rect class="fill" x="330" y="96" width="7" height="7"/>
-          <rect class="fillr" x="352" y="410" width="8" height="8"/>
-        </svg>
-        <div class="at fs mono micro hide-tall" style="--x:148;--y:100;--fs:9.5">
-          <span>Seas / portfolio</span>
-          <span>48.5312° N — 25.0374° E</span>
-          <span>UTC +02:00 · 25 fps</span>
+      <div class="layer" data-d="4">
+        <div class="frame">
+          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
+          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
+          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>00</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
+          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Cover</p>
+          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
+          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
+          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Scroll to fly ↓</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
+          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">00 / 04</p>
         </div>
       </div>
 
@@ -130,74 +101,67 @@
   <section class="poster" id="profile" aria-labelledby="profile-title">
     <div class="sheet">
 
-      <div class="layer" data-d="-11">
+      <div class="layer" data-d="-12">
         <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-a" width="11" height="11" patternUnits="userSpaceOnUse"><circle cx="5.5" cy="5.5" r="3.4" class="fillr"/></pattern></defs>
-          <circle cx="1000" cy="470" r="236" fill="url(#ht-a)"/>
-          <circle cx="1000" cy="470" r="186" class="fillr"/>
-          <circle class="h" cx="1090" cy="420" r="290"/>
-          <line class="h h2" x1="700" y1="420" x2="1420" y2="420"/>
-          <line class="h h2" x1="1090" y1="100" x2="1090" y2="760"/>
-          <text class="mt" x="1102" y="114">ø 580</text>
+          <defs><pattern id="ht-pw" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="3" class="dot"/></pattern></defs>
+          <circle cx="239.7" cy="488.9" r="188" fill="url(#ht-pw)"/>
+          <circle class="disc" cx="239.7" cy="488.9" r="143.8"/>
+          <circle class="o o--dash" cx="328.6" cy="400" r="287.5"/>
+          <line class="a" x1="41" y1="400" x2="616" y2="400"/>
+          <line class="a" x1="328.6" y1="112.5" x2="328.6" y2="687.5"/>
+          <text class="lbl" x="340.6" y="126">ø 575</text>
         </svg>
         <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="ht-at" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.2" class="fillr"/></pattern></defs>
-          <circle cx="230" cy="316" r="104" fill="url(#ht-at)"/>
-          <circle cx="230" cy="316" r="80" class="fillr"/>
-          <circle class="h" cx="268" cy="290" r="126"/>
+          <defs><pattern id="ht-pt" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.1" class="dot"/></pattern></defs>
+          <circle cx="137.7" cy="319.3" r="120" fill="url(#ht-pt)"/>
+          <circle class="disc" cx="137.7" cy="319.3" r="92.7"/>
         </svg>
       </div>
 
-      <div class="layer" data-d="-4">
+      <div class="layer" data-d="-6">
         <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs>
-            <pattern id="hatch-a" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" class="hatch"/></pattern>
-          </defs>
-          <circle cx="1090" cy="420" r="196" fill="#EDEBE6"/>
-          <circle cx="1090" cy="420" r="196" fill="url(#hatch-a)"/>
-          <circle class="h strong" cx="1090" cy="420" r="196"/>
-          <line class="h h2" x1="894" y1="420" x2="1286" y2="420"/>
-          <line class="h h2" x1="1090" y1="224" x2="1090" y2="616"/>
-          <text class="mt" x="1090" y="440" text-anchor="middle">portrait — placeholder</text>
+          <defs><pattern id="hatch-w" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" class="hatch"/></pattern></defs>
+          <circle cx="328.6" cy="400" r="232.6" class="paperfill"/>
+          <circle cx="328.6" cy="400" r="232.6" fill="url(#hatch-w)"/>
+          <circle class="o o--strong" cx="328.6" cy="400" r="232.6"/>
+          <line class="a" x1="96" y1="400" x2="561.2" y2="400"/>
+          <text class="lbl" x="328.6" y="388" text-anchor="middle">portrait — placeholder</text>
         </svg>
         <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="hatch-at" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch"/></pattern></defs>
-          <circle cx="268" cy="290" r="88" fill="#EDEBE6"/>
-          <circle cx="268" cy="290" r="88" fill="url(#hatch-at)"/>
-          <circle class="h strong" cx="268" cy="290" r="88"/>
-          <text class="mt" x="268" y="294" text-anchor="middle">portrait</text>
+          <defs><pattern id="hatch-t" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch"/></pattern></defs>
+          <circle cx="195" cy="262" r="150" class="paperfill"/>
+          <circle cx="195" cy="262" r="150" fill="url(#hatch-t)"/>
+          <circle class="o o--strong" cx="195" cy="262" r="150"/>
+          <text class="lbl" x="195" y="266" text-anchor="middle">portrait</text>
         </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <h2 class="at fs hv big" id="profile-title" style="--x:140;--y:132;--fs:164;--tx:30;--ty:78;--tfs:72">About</h2>
-        <p class="at fs mono meta" style="--x:150;--y:292;--fs:11;--tx:36;--ty:150;--tfs:9">
-          Seas <i>✦</i> video editor &amp; motion designer
+        <h2 class="at fs hv title" id="profile-title" style="--x:578;--y:168;--fs:133;--tx:20;--ty:436;--tfs:82">About</h2>
+        <p class="at w fs lede" style="--x:585.2;--y:341;--w:758.8;--fs:31;--tx:24;--ty:520;--tw:342;--tfs:17">
+          I'm Seas — a video editor and motion designer from Kolomyia, Ukraine. I care about the details most people never notice: timing, easing, color, and the cut that lands exactly on the beat.
         </p>
-        <p class="at w fs lede" style="--x:148;--y:350;--w:560;--fs:23;--tx:34;--ty:420;--tw:322;--tfs:14">
-          I'm Seas — a video editor and motion designer from Kolomyia, Ukraine. I care about the details most people never notice:
-          <em>timing</em>, easing, color, and the cut that lands exactly on the beat.
-        </p>
-        <dl class="at w fs facts" style="--x:150;--y:596;--w:560;--fs:12;--tx:36;--ty:566;--tw:322;--tfs:9.5">
-          <div><dt>Base</dt><dd>After Effects · Premiere</dd></div>
-          <div><dt>Tools</dt><dd>Resolve · Blender · Remotion · 10+ more</dd></div>
+        <dl class="at w fs facts hide-tall" style="--x:585.2;--y:660;--w:758.8;--fs:19">
+          <div><dt>Base</dt><dd>After Effects</dd></div>
+          <div><dt>Tools</dt><dd>Resolve, Blender</dd></div>
           <div><dt>Since</dt><dd>2024</dd></div>
-          <div><dt>Status</dt><dd><i>■</i> available for commissions</dd></div>
+          <div><dt>Status</dt><dd>Open for work</dd></div>
         </dl>
       </div>
 
-      <div class="layer" data-d="6">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <line class="h dot" x1="1236" y1="560" x2="1340" y2="660"/>
-          <circle class="ring" cx="1344" cy="664" r="3.5"/>
-          <text class="mt" x="1250" y="684">fig. 01 — your photo here</text>
-          <line class="ruler" x1="1392" y1="120" x2="1392" y2="780"/>
-          <line class="ruler ruler--major" x1="1395" y1="120" x2="1395" y2="780"/>
-          <rect class="fillr" x="720" y="140" width="10" height="10"/>
-          <rect class="fill" x="736" y="140" width="5" height="5"/>
-          <path class="h" d="M84 96V76H104"/><path class="h" d="M1376 804V824H1356"/>
-        </svg>
-        <p class="at fs mono micro hide-tall" style="--x:1236;--y:92;--fs:9.5"><span>01 / 05</span><span>profile</span></p>
+      <div class="layer" data-d="4">
+        <div class="frame">
+          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
+          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
+          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>01</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
+          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Profile</p>
+          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
+          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
+          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
+          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">01 / 04</p>
+        </div>
       </div>
 
     </div>
@@ -207,83 +171,42 @@
   <section class="poster" id="fields" aria-labelledby="fields-title">
     <div class="sheet">
 
-      <div class="layer" data-d="-10">
-        <h2 class="at fs hv vword" id="fields-title" style="--x:112;--y:84;--fs:188;--tx:8;--ty:92;--tfs:78">Fields</h2>
-        <p class="at fs mono vnote" style="--x:352;--y:84;--fs:10;--tx:88;--ty:92;--tfs:8">
-          different industries <i>✦</i> one habit: every frame has a reason to be there
-        </p>
+      <div class="layer" data-d="-12">
+        <h2 class="at fs hv vword hide-tall" id="fields-title" style="--x:96;--y:168;--fs:190">Fields</h2>
+        <p class="at mono vnote hide-tall" style="--x:396;--y:168">Different industries <i>✦</i> one habit: every frame has a reason to be there</p>
+        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <defs><pattern id="ht-fw" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.4" class="dot"/></pattern></defs>
+          <circle cx="487.4" cy="677.1" r="72" fill="url(#ht-fw)"/>
+          <circle class="disc" cx="487.4" cy="677.1" r="54.9"/>
+          <circle class="o" cx="487.4" cy="677.1" r="88.9"/>
+        </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <p class="at w fs mono fig-row" style="--x:440;--y:96;--w:900;--fs:11;--tx:120;--ty:92;--tw:252;--tfs:8.5">
-          <span>fig. 02</span><i>✦</i><span>fields of practice</span><i class="hide-tall">✦</i><span class="hide-tall">six disciplines</span>
-        </p>
-
-        <ol class="at w fs fields" style="--x:440;--y:140;--w:900;--fs:16;--tx:120;--ty:118;--tw:252;--tfs:10.5">
-          <li class="field">
-            <span class="field__n">01</span>
-            <h3 class="field__t hv">Edits</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Shorts, reels, ads and long-form. Rhythm first, effects second.</p>
-            <p class="field__k">Premiere <b>■</b> Resolve</p>
-          </li>
-          <li class="field">
-            <span class="field__n">02</span>
-            <h3 class="field__t hv">Motion design</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Kinetic type, explainers, title sequences and brand motion.</p>
-            <p class="field__k">After Effects</p>
-          </li>
-          <li class="field">
-            <span class="field__n">03</span>
-            <h3 class="field__t hv">AI generative</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Image and video generation built into real edits — not instead of them.</p>
-            <p class="field__k">Veo <b>■</b> Kling <b>■</b> Higgsfield</p>
-          </li>
-          <li class="field">
-            <span class="field__n">04</span>
-            <h3 class="field__t hv">React graphics</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Code-driven video: templates, data and whole series from one system.</p>
-            <p class="field__k">React <b>■</b> Remotion</p>
-          </li>
-          <li class="field">
-            <span class="field__n">05</span>
-            <h3 class="field__t hv">Color</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Grading and looks that hold together across a whole series.</p>
-            <p class="field__k">DaVinci Resolve</p>
-          </li>
-          <li class="field">
-            <span class="field__n">06</span>
-            <h3 class="field__t hv">3D</h3>
-            <i class="field__lead" aria-hidden="true"></i>
-            <p class="field__d">Scenes, product shots and simulations.</p>
-            <p class="field__k">Blender <b>■</b> Octane</p>
-          </li>
+        <h2 class="at fs hv title show-tall-block" style="--x:24;--y:112;--fs:82" aria-hidden="true">Fields</h2>
+        <ol class="at w fs fields" style="--x:585.2;--y:168;--w:758.8;--fs:19;--tx:24;--ty:208;--tw:342;--tfs:14">
+          <li><span class="n">01</span><h3 class="hv">Edits</h3><p>Shorts, reels, ads and long-form. Rhythm first.</p><span class="k">Premiere · Resolve</span></li>
+          <li><span class="n">02</span><h3 class="hv">Motion design</h3><p>Kinetic type, explainers, title sequences.</p><span class="k">After Effects</span></li>
+          <li><span class="n">03</span><h3 class="hv">AI generative</h3><p>Generated image and video inside real edits.</p><span class="k">Veo · Kling</span></li>
+          <li><span class="n">04</span><h3 class="hv">React graphics</h3><p>Code-driven video: templates and whole series.</p><span class="k">Remotion</span></li>
+          <li><span class="n">05</span><h3 class="hv">Color</h3><p>Grading and looks that hold across a series.</p><span class="k">Resolve</span></li>
+          <li><span class="n">06</span><h3 class="hv">3D</h3><p>Scenes, product shots and simulations.</p><span class="k">Blender</span></li>
         </ol>
       </div>
 
-      <div class="layer" data-d="5">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <line class="h" x1="424" y1="84" x2="424" y2="816"/>
-          <circle class="ring" cx="424" cy="84" r="3.5"/>
-          <circle class="dotf" cx="424" cy="816" r="2.5"/>
-          <line class="h" x1="418" y1="140" x2="430" y2="140"/>
-          <line class="h" x1="418" y1="776" x2="430" y2="776"/>
-          <text class="mt" transform="translate(414 776) rotate(-90)">636 — six rows × 106</text>
-          <path class="h h2" d="M1300 900A140 140 0 0 1 1440 760"/>
-          <path class="h h2 dash" d="M1276 900A164 164 0 0 1 1440 736"/>
-          <path class="h thick" d="M1266.4 846A182 182 0 0 1 1300.5 790.4"/>
-          <rect class="fillr" x="1368" y="98" width="9" height="9"/>
-          <rect class="fill" x="1382" y="98" width="5" height="5"/>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <line class="h" x1="110" y1="84" x2="110" y2="712"/>
-          <circle class="ring" cx="110" cy="84" r="3"/>
-          <rect class="fillr" x="360" y="70" width="8" height="8"/>
-        </svg>
+      <div class="layer" data-d="4">
+        <div class="frame">
+          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
+          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
+          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>02</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
+          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Fields</p>
+          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
+          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
+          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
+          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">02 / 04</p>
+        </div>
       </div>
 
     </div>
@@ -294,54 +217,56 @@
     <div class="sheet">
 
       <div class="layer" data-d="-15">
-        <figure class="at w fs work" style="--x:448;--y:626;--w:224;--fs:12">
-          <div class="work__frame"><span>work_06.mp4</span></div>
-          <figcaption><span class="mono"><i>06</i> 3D · 2025</span><b class="hv">Untitled scene</b></figcaption>
-        </figure>
-        <p class="at fs hv outline echo hide-tall" style="--x:1440;--y:96;--fs:200" aria-hidden="true">06</p>
+        <p class="at fs hv outline echo ar hide-tall" style="--x:1356;--y:500;--fs:300" aria-hidden="true">06</p>
       </div>
 
-      <div class="layer" data-d="-9">
-        <figure class="at w fs work" style="--x:760;--y:430;--w:250;--fs:12;--tx:24;--ty:512;--tw:164;--tfs:9">
-          <div class="work__frame"><span>work_04.mp4</span></div>
-          <figcaption><span class="mono"><i>04</i> React graphics · 2026</span><b class="hv">Untitled series</b></figcaption>
-        </figure>
-        <figure class="at w fs work" style="--x:1064;--y:512;--w:296;--fs:12;--tx:202;--ty:512;--tw:164;--tfs:9">
-          <div class="work__frame"><span>work_05.mp4</span></div>
-          <figcaption><span class="mono"><i>05</i> Color · 2025</span><b class="hv">Untitled grade</b></figcaption>
+      <div class="layer" data-d="-10">
+        <figure class="at w fs work hide-tall" style="--x:878.8;--y:168;--w:465.2;--fs:19">
+          <div class="work__frame"><span class="mono">work_02.mp4</span></div>
+          <figcaption><span class="mono">02 — Motion — 2026</span><b class="hv">Untitled motion</b></figcaption>
         </figure>
       </div>
 
-      <div class="layer" data-d="-4">
-        <figure class="at w fs work" style="--x:760;--y:146;--w:300;--fs:12;--tx:24;--ty:374;--tw:164;--tfs:9">
-          <div class="work__frame"><span>work_02.mp4</span></div>
-          <figcaption><span class="mono"><i>02</i> Motion · 2026</span><b class="hv">Untitled motion</b></figcaption>
+      <div class="layer" data-d="-5">
+        <figure class="at w fs work work--hero" style="--x:96;--y:305.2;--w:758.8;--fs:19;--tx:24;--ty:208;--tw:342;--tfs:14">
+          <div class="work__frame"><span class="mono">work_01.mp4 — untitled reel — edit — 2026</span></div>
         </figure>
-        <figure class="at w fs work" style="--x:1100;--y:250;--w:260;--fs:12;--tx:202;--ty:374;--tw:164;--tfs:9">
-          <div class="work__frame"><span>work_03.mp4</span></div>
-          <figcaption><span class="mono"><i>03</i> AI generative · 2026</span><b class="hv">Untitled gen</b></figcaption>
-        </figure>
+        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <defs><pattern id="ht-ww" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.4" class="dot"/></pattern></defs>
+          <circle cx="475.4" cy="518.6" r="72" fill="url(#ht-ww)"/>
+          <circle class="disc" cx="475.4" cy="518.6" r="54.9"/>
+          <path class="play" d="M462 496L500 518.6L462 541.2Z"/>
+        </svg>
+        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
+          <circle class="disc" cx="195" cy="304.2" r="33.9"/>
+          <path class="play" d="M187 290L210 304.2L187 318.4Z"/>
+        </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <h2 class="at fs hv big" id="works-title" style="--x:140;--y:84;--fs:132;--tx:24;--ty:70;--tfs:62">Works</h2>
-        <p class="at fs mono meta" style="--x:560;--y:112;--fs:11;--tx:26;--ty:132;--tfs:9">06 <i>✦</i> placeholders</p>
-        <figure class="at w fs work work--hero" style="--x:148;--y:232;--w:560;--fs:13;--tx:24;--ty:160;--tw:342;--tfs:10">
-          <div class="work__frame"><span>work_01.mp4</span><b class="work__play">▶</b></div>
-          <figcaption><span class="mono"><i>01</i> Edit · 2026</span><b class="hv">Untitled reel</b></figcaption>
-        </figure>
+        <h2 class="at fs hv title" id="works-title" style="--x:89;--y:168;--fs:133;--tx:20;--ty:112;--tfs:82">Works</h2>
+        <ol class="at w fs list" style="--x:878.8;--y:540;--w:465.2;--fs:19;--tx:24;--ty:432;--tw:342;--tfs:14">
+          <li class="show-tall"><span class="n">02</span><b>Untitled motion</b><span class="k">Motion</span></li>
+          <li><span class="n">03</span><b>Untitled gen</b><span class="k">AI generative</span></li>
+          <li><span class="n">04</span><b>Untitled series</b><span class="k">React graphics</span></li>
+          <li><span class="n">05</span><b>Untitled grade</b><span class="k">Color</span></li>
+          <li><span class="n">06</span><b>Untitled scene</b><span class="k">3D</span></li>
+        </ol>
       </div>
 
-      <div class="layer" data-d="5">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <path class="h" d="M136 220V208H148"/><path class="h" d="M720 220V208H708"/>
-          <line class="h dot" x1="708" y1="560" x2="760" y2="600"/>
-          <circle class="ring" cx="764" cy="603" r="3.5"/>
-          <line class="h h2" x1="740" y1="120" x2="740" y2="820"/>
-          <text class="mt" transform="translate(732 820) rotate(-90)">16 : 9 — 1920 × 1080 — 25 fps</text>
-          <rect class="fillr" x="1352" y="122" width="10" height="10"/>
-          <rect class="fill" x="120" y="800" width="6" height="6"/>
-        </svg>
+      <div class="layer" data-d="4">
+        <div class="frame">
+          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
+          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
+          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>03</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
+          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Works — placeholders</p>
+          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
+          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
+          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:768">16 : 9 — 1920 × 1080 — 25 fps</p>
+          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">03 / 04</p>
+        </div>
       </div>
 
     </div>
@@ -353,49 +278,64 @@
 
       <div class="layer" data-d="-12">
         <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-c" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="3.8" class="fillr"/></pattern></defs>
-          <circle cx="1080" cy="420" r="300" fill="url(#ht-c)"/>
-          <circle cx="1080" cy="420" r="236" class="fillr"/>
-          <circle class="h" cx="1080" cy="420" r="340"/>
-          <line class="h h2" x1="660" y1="420" x2="1430" y2="420"/>
-          <text class="mt" x="1090" y="68">ø 680</text>
+          <circle class="o o--dash" cx="1111.5" cy="400" r="287.5"/>
+          <line class="a" x1="824" y1="400" x2="1399" y2="400"/>
+          <line class="a" x1="1111.5" y1="112.5" x2="1111.5" y2="687.5"/>
+          <circle class="ring" cx="824" cy="400" r="3.5"/>
+          <text class="lbl" x="1123.5" y="126">ø 575</text>
         </svg>
         <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="ht-ct" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.2" class="fillr"/></pattern></defs>
-          <circle cx="286" cy="262" r="118" fill="url(#ht-ct)"/>
-          <circle cx="286" cy="262" r="92" class="fillr"/>
+          <circle class="o o--dash" cx="195" cy="262" r="176"/>
         </svg>
-        <p class="at fs hv outline echo" style="--x:160;--y:300;--fs:128;--tx:40;--ty:186;--tfs:48" aria-hidden="true">the cut.</p>
+        <p class="at fs hv outline echo hide-tall" style="--x:193.8;--y:352;--fs:133" aria-hidden="true">the cut.</p>
+      </div>
+
+      <div class="layer" data-d="-6">
+        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <defs><pattern id="ht-xw" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="3.8" class="dot"/></pattern></defs>
+          <circle cx="1111.5" cy="400" r="232.6" fill="url(#ht-xw)"/>
+          <circle class="disc" cx="1111.5" cy="400" r="188"/>
+        </svg>
+        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
+          <defs><pattern id="ht-xt" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.2" class="dot"/></pattern></defs>
+          <circle cx="195" cy="262" r="150" fill="url(#ht-xt)"/>
+          <circle class="disc" cx="195" cy="262" r="120"/>
+        </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <dl class="at fs mono credits" style="--x:150;--y:92;--fs:10.5;--tx:36;--ty:70;--tfs:8.5">
-          <dt>directed by</dt><dd>you</dd>
-          <dt>edited &amp; graded</dt><dd>seas</dd>
-          <dt>year</dt><dd>2026</dd>
+        <dl class="at fs credits hide-tall" style="--x:96;--y:168;--fs:12">
+          <dt>Directed by</dt><dd>You</dd>
+          <dt>Edited &amp; graded</dt><dd>Seas</dd>
+          <dt>Year</dt><dd>2026</dd>
         </dl>
-        <h2 class="at fs hv big" id="contact-title" style="--x:140;--y:180;--fs:128;--tx:30;--ty:136;--tfs:48">Let's make<br>the cut<i>.</i></h2>
+        <h2 class="at fs hv title" id="contact-title" style="--x:89;--y:232;--fs:133;--tx:20;--ty:436;--tfs:51">Let's make<br>the cut.</h2>
 
-        <ul class="at w fs links" style="--x:150;--y:512;--w:660;--fs:15;--tx:30;--ty:420;--tw:330;--tfs:11">
-          <li><a class="link" href="https://t.me/s_3as" target="_blank" rel="noopener"><span class="mono">Telegram — direct</span><b class="hv">@s_3as</b><i>↗</i></a></li>
-          <li><a class="link" href="https://t.me/tyses" target="_blank" rel="noopener"><span class="mono">Telegram — channel</span><b class="hv">@tyses</b><i>↗</i></a></li>
-          <li><button class="link" type="button" data-copy="._.seas"><span class="mono">Discord</span><b class="hv">._.seas</b><i data-copy-label>copy</i></button></li>
-          <li><a class="link" href="https://ko-fi.com/seas" target="_blank" rel="noopener"><span class="mono">Ko-fi — tips</span><b class="hv">ko-fi.com/seas</b><i>↗</i></a></li>
+        <ul class="at w fs links" style="--x:96;--y:541;--w:758.8;--fs:19;--tx:24;--ty:548;--tw:342;--tfs:14">
+          <li><a class="link" href="https://t.me/s_3as" target="_blank" rel="noopener"><span class="mono">Telegram</span><b class="hv">@s_3as</b><span class="mono go">Write ↗</span></a></li>
+          <li><a class="link" href="https://t.me/tyses" target="_blank" rel="noopener"><span class="mono">Channel</span><b class="hv">@tyses</b><span class="mono go">Open ↗</span></a></li>
+          <li><button class="link" type="button" data-copy="._.seas"><span class="mono">Discord</span><b class="hv">._.seas</b><span class="mono go" data-copy-label>Copy</span></button></li>
+          <li><a class="link" href="https://ko-fi.com/seas" target="_blank" rel="noopener"><span class="mono">Ko-fi</span><b class="hv">ko-fi.com/seas</b><span class="mono go">Open ↗</span></a></li>
         </ul>
-        <p class="at fs mono credit" style="--x:150;--y:786;--fs:11;--tx:30;--ty:676;--tfs:9">© Seas — 2026 <i>✦</i> Kolomyia, UA → worldwide</p>
+        <p class="at w fs body hide-tall" style="--x:878.8;--y:656;--w:367.4;--fs:19">
+          Commissions open, worldwide. Replies within a day.
+        </p>
+        <p class="at fs hv fin ar hide-tall" style="--x:1344;--y:690;--fs:51" aria-hidden="true">Fin.</p>
       </div>
 
-      <div class="layer" data-d="6">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <line class="h hr" x1="104" y1="84" x2="104" y2="816"/>
-          <path class="h" d="M84 96V76H104"/><path class="h" d="M1356 76H1376V96"/>
-          <path class="h" d="M1376 804V824H1356"/><path class="h" d="M104 824H84V804"/>
-          <line class="h dot" x1="820" y1="640" x2="960" y2="640"/>
-          <circle class="ring" cx="966" cy="640" r="3.5"/>
-          <text class="mt" x="978" y="643">fig. 04 — reply within a day</text>
-          <rect class="fill" x="1352" y="760" width="10" height="10"/>
-        </svg>
-        <p class="at fs hv fin hide-tall" style="--x:1392;--y:760;--fs:44" aria-hidden="true">Fin.</p>
+      <div class="layer" data-d="4">
+        <div class="frame">
+          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
+          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
+          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>04</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
+          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Contact</p>
+          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
+          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
+          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">© Seas 2026</p>
+          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
+          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">04 / 04</p>
+        </div>
       </div>
 
     </div>
@@ -403,18 +343,14 @@
 
 </main>
 
-<nav class="rail rail--bot" aria-label="Sections">
-  <div class="timeline" aria-hidden="true"><i class="timeline__head" id="playhead"></i></div>
-  <div class="rail__stops" id="stops">
+<nav class="hud hud--bot" aria-label="Sections">
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+  <div class="hud__stops" id="stops">
     <a href="#cover" data-go="0">00 Cover</a>
-    <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-    <a href="#profile" data-go="1">01 <span class="hide-sm">Profile</span></a>
-    <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-    <a href="#fields" data-go="2">02 <span class="hide-sm">Fields</span></a>
-    <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-    <a href="#works" data-go="3">03 <span class="hide-sm">Works</span></a>
-    <i class="rail__sep hide-sm" aria-hidden="true">✦</i>
-    <a href="#contact" data-go="4">04 <span class="hide-sm">Contact</span></a>
+    <a href="#profile" data-go="1">01 Profile</a>
+    <a href="#fields" data-go="2">02 Fields</a>
+    <a href="#works" data-go="3">03 Works</a>
+    <a href="#contact" data-go="4">04 Contact</a>
   </div>
 </nav>
 
