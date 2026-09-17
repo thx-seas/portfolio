@@ -24,7 +24,7 @@ export function makeInkMaterial(uniforms) {
       attribute float aU;
       attribute vec2 plate;      // blood, black
       attribute vec4 meta;       // seed, length, dryness, opacity
-      attribute float delay;
+      attribute vec2 draw;       // arc length where this stroke starts drawing, and over what distance
       attribute vec3 fx;         // stretch with speed, heartbeat, breathing
       attribute float owner;     // poster index for ink that belongs to one poster, -1 otherwise
       uniform float uVis[8];
@@ -32,6 +32,7 @@ export function makeInkMaterial(uniforms) {
       uniform float uPx;
       uniform float uTime;
       uniform float uStretch;
+      uniform float uDrawn;      // furthest the camera has been along the path
       varying float vU;
       varying float vV;
       varying vec2 vPlate;
@@ -68,7 +69,7 @@ export function makeInkMaterial(uniforms) {
 
         vU = aU; vV = aV; vPlate = plate; vMeta = meta; vDepth = depth; vBeat = beat;
         vVis = owner < 0.0 ? 1.0 : uVis[int(owner + 0.5)];
-        float r = clamp((uTime - delay) / 2.4, 0.0, 1.0);
+        float r = clamp((uDrawn - draw.x) / max(draw.y, 0.001), 0.0, 1.0);
         vReveal = 1.0 - pow(1.0 - r, 3.0);
         vReveal *= 1.0 - fx.z * (0.05 + 0.05 * sin(uTime * 0.7 + meta.x * 6.283));
       }`,
@@ -119,12 +120,12 @@ export const PLATE = {
 
 export class InkBatch {
   constructor() {
-    this.a = { position: [], tangent3: [], width: [], aV: [], aU: [], plate: [], meta: [], delay: [], fx: [], owner: [] };
+    this.a = { position: [], tangent3: [], width: [], aV: [], aU: [], plate: [], meta: [], draw: [], fx: [], owner: [] };
     this.index = [];
     this.count = 0;
   }
 
-  /* points: Vector3[]; o: { width(t), plate, seed, dry, op, delay, density, samples, fx } */
+  /* points: Vector3[]; o: { width(t), plate, seed, dry, op, draw: [from, over], density, samples, fx } */
   add(points, o) {
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
     const len = curve.getLength();
@@ -134,6 +135,7 @@ export class InkBatch {
     const P = V(), T = V();
     const plate = o.plate || PLATE.ink;
     const fx = o.fx || [0, 0, 0];
+    const draw = o.draw || [-1e6, 1];
     const a = this.a;
     for (let i = 0; i <= S; i++) {
       const t = i / S;
@@ -148,7 +150,7 @@ export class InkBatch {
         a.aU.push(t);
         a.plate.push(plate[0], plate[1]);
         a.meta.push(o.seed ?? 0, len, o.dry ?? 0.3, o.op ?? 1);
-        a.delay.push(o.delay ?? 0);
+        a.draw.push(draw[0], draw[1]);
         a.fx.push(fx[0], fx[1], fx[2]);
         a.owner.push(o.owner ?? -1);
       }
@@ -162,7 +164,7 @@ export class InkBatch {
 
   mesh(material) {
     const g = new THREE.BufferGeometry();
-    const sizes = { position: 3, tangent3: 3, width: 1, aV: 1, aU: 1, plate: 2, meta: 4, delay: 1, fx: 3, owner: 1 };
+    const sizes = { position: 3, tangent3: 3, width: 1, aV: 1, aU: 1, plate: 2, meta: 4, draw: 2, fx: 3, owner: 1 };
     for (const [name, arr] of Object.entries(this.a)) g.setAttribute(name, new THREE.Float32BufferAttribute(arr, sizes[name]));
     g.setIndex(this.count > 65535 ? new THREE.Uint32BufferAttribute(this.index, 1) : new THREE.Uint16BufferAttribute(this.index, 1));
     const m = new THREE.Mesh(g, material);

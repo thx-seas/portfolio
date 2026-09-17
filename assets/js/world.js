@@ -17,6 +17,10 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
   const T = V(), R = V(), U = V(), P = V(), Q = V();
   const mobile = tall || board.W < 700;
 
+  /* ink draws itself as the camera comes up on it: from LEAD ahead, over OVER of travel */
+  const LEAD = 78, OVER = 34, LINE_LEAD = 190;
+  const drawAt = (s) => [s - LEAD, OVER];
+
   /* ---- text keeps clear: world point → is it over type on the poster it is seen from? ---- */
   const seen = { x: 0, y: 0, depth: 0 };
   const overText = (W3, i, pad = 12) => {
@@ -90,7 +94,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
       }
     }
     batch.add(pts, {
-      plate: ln.plate, seed: ln.seed, dry: ln.dry, op: ln.op, delay: 0.1, density: 1.3, fx: [0, ln.beat, 0],
+      plate: ln.plate, seed: ln.seed, dry: ln.dry, op: ln.op, draw: [s0 - LINE_LEAD, path.length - s0], density: 1.3, fx: [0, ln.beat, 0],
       width: (t) => {
         let w = ln.w * (0.72 + 0.56 * Math.pow(0.5 + 0.5 * Math.sin(t * 97 + ln.seed), 2));
         for (const [c, sd, a] of swells) w += a * Math.exp(-Math.pow((t - c) / sd, 2)) * (ln.w / 0.06);
@@ -98,7 +102,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
       },
     });
     if (strand.length) {
-      batch.add(strand, { plate: ln.plate, seed: ln.seed + 40, dry: 0.65, op: 0.7, delay: 0.35, density: 1.1, width: () => 0.009 });
+      batch.add(strand, { plate: ln.plate, seed: ln.seed + 40, dry: 0.65, op: 0.7, draw: [s0 - LINE_LEAD * 0.8, path.length - s0], density: 1.1, width: () => 0.009 });
     }
   }
 
@@ -111,7 +115,9 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
     const d = po.portal.d;
     const C = board.point(i, po.portal.x, po.portal.y, d);
     const Rw = po.sunR * board.scale(d) * cfg.scale;
+    const reach = cfg.len ?? 1, thick = cfg.width ?? 1, black = cfg.black ?? 0.55;
     const count = Math.round(cfg.count * (mobile ? 0.7 : 1));
+    const burstDraw = drawAt(path.portalS[i]);
     const pick = () => {
       if (cfg.dirs && B() < 0.55) return cfg.dirs[Math.floor(B() * cfg.dirs.length)] + (B() - 0.5) * 0.75;
       return B() * TAU;
@@ -130,7 +136,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
       if (kind < 0.58) {
         // pointed radial blade
         const r0 = Rw * (0.84 + B() * 0.4);
-        const len = Rw * (0.45 + Math.pow(B(), 1.6) * 5.4);
+        const len = Rw * (0.45 + Math.pow(B(), 1.6) * 5.4) * reach;
         const bend = (B() - 0.5) * 0.8;
         const z0 = (B() - 0.5) * Rw * 0.8;
         const z1 = z0 + (B() - 0.3) * Rw * 3.6;
@@ -138,50 +144,50 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
           const t = k / 28;
           pts.push(at(ang + bend * Math.pow(t, 1.5), r0 + len * t, lerp(z0, z1, t)));
         }
-        const W = Rw * (0.012 + Math.pow(B(), 3.2) * 0.15);
+        const W = Rw * (0.012 + Math.pow(B(), 3.2) * 0.15) * thick;
         o = {
-          plate: c < 0.55 ? PLATE.ink : c < 0.85 ? PLATE.blood : PLATE.gray,
+          plate: c < black ? PLATE.ink : c < black + 0.3 ? PLATE.blood : PLATE.gray,
           width: blade(W, 0.1 + B() * 0.35), dry: B() * 0.9, op: 0.95, density: 6, fx: [0, 0, 1],
         };
       } else if (kind < 0.78) {
         // sweeping curve around the disc
         const dirn = B() < 0.5 ? -1 : 1;
         const sweep = 0.5 + B() * 1.5;
-        const rA = Rw * (1.1 + B() * 0.6), rB = Rw * (1.5 + B() * 2.2);
+        const rA = Rw * (1.1 + B() * 0.6), rB = Rw * (1.5 + B() * 2.2 * reach);
         const z0 = (B() - 0.5) * Rw, z1 = z0 + (B() - 0.4) * Rw * 2.5;
         for (let k = 0; k <= 28; k++) {
           const t = k / 28;
           pts.push(at(ang + dirn * sweep * t, lerp(rA, rB, Math.pow(t, 1.4)), lerp(z0, z1, t)));
         }
-        const W = Rw * (0.01 + Math.pow(B(), 2) * 0.06);
-        o = { plate: c < 0.6 ? PLATE.blood : PLATE.ink, width: blade(W, 0.35 + B() * 0.3), dry: 0.3 + B() * 0.5, op: 0.95, density: 6, fx: [0, 0, 1] };
+        const W = Rw * (0.01 + Math.pow(B(), 2) * 0.06) * thick;
+        o = { plate: c < 0.6 + (0.55 - black) ? PLATE.blood : PLATE.ink, width: blade(W, 0.35 + B() * 0.3), dry: 0.3 + B() * 0.5, op: 0.95, density: 6, fx: [0, 0, 1] };
       } else {
         // long hair
         const r0 = Rw * (0.95 + B() * 0.5);
-        const len = Rw * (2 + B() * 6);
+        const len = Rw * (2 + B() * 6) * reach;
         const bend = (B() - 0.5) * 0.25;
         const z0 = (B() - 0.5) * Rw, z1 = z0 + (B() - 0.3) * Rw * 4;
         for (let k = 0; k <= 28; k++) {
           const t = k / 28;
           pts.push(at(ang + bend * t, r0 + len * t, lerp(z0, z1, t)));
         }
-        o = { plate: c < 0.5 ? PLATE.ink : c < 0.8 ? PLATE.gray : PLATE.blood, width: () => Rw * 0.005, dry: 0.2, op: 0.8, density: 3, fx: [0, 0, 1] };
+        o = { plate: c < black * 0.9 ? PLATE.ink : c < 0.85 ? PLATE.gray : PLATE.blood, width: () => Rw * 0.005 * thick, dry: 0.2, op: 0.8, density: 3, fx: [0, 0, 1] };
       }
       pts = clipToText(pts, i, 6);
       if (!pts) continue;
-      batch.add(pts, { ...o, seed: B() * 100, delay: (i === 0 ? 0.15 : 0) + B() * 0.9, owner: i });
+      batch.add(pts, { ...o, seed: B() * 100, draw: [burstDraw[0] + B() * 12, OVER], owner: i });
     }
 
     // splatter
     for (let m = 0; m < count * 0.8; m++) {
       const a = pick();
-      const r = Rw * (1.15 + Math.pow(B(), 0.7) * 3.6);
+      const r = Rw * (1.15 + Math.pow(B(), 0.7) * 3.6 * reach);
       const z = (B() - 0.5) * Rw * 2;
       const p0 = at(a, r, z);
       if (overText(p0, i, 6)) continue;
       const size = Rw * (0.012 + Math.pow(B(), 4) * 0.07);
       const p1 = at(a + (B() - 0.5) * 0.02, r + size * (1 + B() * 3), z);
-      batch.add([p0, p1], { plate: B() < 0.8 ? PLATE.ink : PLATE.blood, width: blade(size, 0.35), seed: B() * 40, dry: 0, op: 0.9, delay: 0.6 + B() * 0.8, samples: 4, owner: i });
+      batch.add([p0, p1], { plate: B() < 0.8 ? PLATE.ink : PLATE.blood, width: blade(size, 0.35), seed: B() * 40, dry: 0, op: 0.9, draw: [burstDraw[0] + 8 + B() * 14, OVER], samples: 4, owner: i });
     }
   });
 
@@ -207,11 +213,11 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
     };
     const red = g === 1;
     batch.add(ring(radius, a0, sweep, 64), {
-      plate: red ? PLATE.blood : PLATE.ink, width: brush(fh * (red ? 0.05 : 0.075), 0.3), seed: 60 + g * 7, dry: 0.85, op: 1, delay: 0.8, density: 2,
+      plate: red ? PLATE.blood : PLATE.ink, width: brush(fh * (red ? 0.05 : 0.075), 0.3), seed: 60 + g * 7, dry: 0.85, op: 1, draw: drawAt(s), density: 2,
     });
     for (let h = 0; h < 3; h++) {
       batch.add(ring(radius * (1.07 + h * 0.055), a0 + sweep * (0.4 + A() * 0.4), TAU * (0.12 + A() * 0.25), 40), {
-        plate: h === 1 ? PLATE.blood : PLATE.gray, width: () => fh * 0.004, seed: 90 + g * 3 + h, dry: 0.1, op: 0.9, delay: 1, density: 2,
+        plate: h === 1 ? PLATE.blood : PLATE.gray, width: () => fh * 0.004, seed: 90 + g * 3 + h, dry: 0.1, op: 0.9, draw: [s - LEAD + 6, OVER], density: 2,
       });
     }
   }
@@ -251,7 +257,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
         batch.add(pts, {
           plate: c < 0.6 ? PLATE.ink : c < 0.85 ? PLATE.blood : PLATE.gray,
           width: blade(size * (0.01 + Math.pow(Bl(), 3) * 0.12), 0.1 + Bl() * 0.4),
-          seed: Bl() * 90, dry: Bl() * 0.9, op: 0.92, delay: 0.8 + Bl(), density: 5, fx: [0.4, 0, 1],
+          seed: Bl() * 90, dry: Bl() * 0.9, op: 0.92, draw: [s - LEAD + Bl() * 10, OVER], density: 5, fx: [0.4, 0, 1],
         });
       }
     }
@@ -280,7 +286,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
     batch.add(pts, {
       plate: c < 0.66 ? PLATE.ink : c < 0.86 ? PLATE.gray : PLATE.blood,
       width: blade(0.01 + Math.pow(S(), 2.4) * 0.13, 0.15 + S() * 0.5),
-      seed: S() * 80, dry: 0.7, op: 0.85, delay: 0.5 + S() * 1.2, density: 3, fx: [1, 0, 0],
+      seed: S() * 80, dry: 0.7, op: 0.85, draw: drawAt(s), density: 3, fx: [1, 0, 0],
     });
   }
 
@@ -304,17 +310,11 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
     const p1 = Q.copy(p0).addScaledVector(T, size * (1.2 + D() * 1.5)).clone();
     batch.add([p0, p1], {
       plate: D() < 0.86 ? PLATE.ink : PLATE.blood, width: blade(size, 0.4), seed: D() * 50, dry: 0, op: 0.9,
-      delay: 0.4 + D() * 1.6, samples: 4, fx: [1.4, 0, 0],
+      draw: drawAt(s), samples: 4, fx: [1.4, 0, 0],
     });
   }
 
   return batch.mesh(material);
-}
-
-export function shiftDelays(mesh, offset) {
-  const attr = mesh.geometry.getAttribute('delay');
-  for (let i = 0; i < attr.count; i++) attr.setX(i, attr.getX(i) + offset);
-  attr.needsUpdate = true;
 }
 
 export { clamp };

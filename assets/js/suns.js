@@ -3,7 +3,7 @@
    and it dissolves as the camera passes. */
 import * as THREE from 'three';
 
-export function makeSun({ shared, center, frame, disc, outer, cell, dot, delay = 0 }) {
+export function makeSun({ shared, center, frame, disc, outer, cell, dot, draw }) {
   const material = new THREE.ShaderMaterial({
     uniforms: {
       ...shared,
@@ -11,7 +11,7 @@ export function makeSun({ shared, center, frame, disc, outer, cell, dot, delay =
       uOuter: { value: outer },
       uCell: { value: cell },
       uDot: { value: dot },
-      uDelay: { value: delay },
+      uDraw: { value: new THREE.Vector2(draw[0], draw[1]) },
       uCenter: { value: center.clone() },
       uVis: { value: 1 },
     },
@@ -37,17 +37,17 @@ export function makeSun({ shared, center, frame, disc, outer, cell, dot, delay =
       uniform float uOuter;
       uniform float uCell;
       uniform float uDot;
-      uniform float uTime;
-      uniform float uDelay;
+      uniform vec2 uDraw;
+      uniform float uDrawn;
       uniform vec3 uCenter;
       uniform float uSunFogFar;
       uniform float uVis;
       varying vec2 vLocal;
       varying float vDepth;
       void main() {
-        float grow = clamp((uTime - uDelay) / 1.1, 0.0, 1.0);
+        float grow = clamp((uDrawn - uDraw.x) / uDraw.y, 0.0, 1.0);
         grow = 1.0 - pow(1.0 - grow, 3.0);
-        float growDots = clamp((uTime - uDelay - 0.35) / 1.2, 0.0, 1.0);
+        float growDots = clamp((uDrawn - uDraw.x - uDraw.y * 0.3) / uDraw.y, 0.0, 1.0);
 
         float r = length(vLocal);
         float aa = fwidth(r) * 0.75;

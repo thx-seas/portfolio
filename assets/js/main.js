@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import Lenis from 'lenis';
 import { V, UP, clamp, smooth, F, FOV, TAN0, posterFrames, makeBoard, buildPath } from './path.js';
 import { makeInkMaterial } from './ink.js';
-import { buildWorld, shiftDelays } from './world.js';
+import { buildWorld } from './world.js';
 import { makePrint } from './print.js';
 import { makeSun } from './suns.js';
 
@@ -112,6 +112,7 @@ function start() {
     uPx: { value: 0 }, uTime: { value: 0 }, uStretch: { value: 0 },
     uFogNear: { value: 55 }, uFogFar: { value: 175 }, uSunFogFar: { value: 200 },
     uVis: { value: new Array(8).fill(1) },
+    uDrawn: { value: -1e6 },     // how far along the path the ink has been drawn in
   };
   const material = makeInkMaterial(inkUniforms);
 
@@ -158,10 +159,10 @@ function start() {
     suns = info.map((po, i) => {
       const k = board.scale(po.portal.d);
       return makeSun({
-        shared: { uTime: inkUniforms.uTime, uSunFogFar: inkUniforms.uSunFogFar },
+        shared: { uDrawn: inkUniforms.uDrawn, uSunFogFar: inkUniforms.uSunFogFar },
         center: portals[i], frame: frames[i],
         disc: po.sun.disc * k, outer: po.sun.outer * k, cell: po.sun.cell * k, dot: po.sun.dot * k,
-        delay: built ? -100 : 0.1,
+        draw: [path.portalS[i] - 78, 34],
       });
     });
     suns.forEach((m) => scene.add(m));
@@ -173,8 +174,7 @@ function start() {
       path.at(s, dr.W).addScaledVector(R, dr.off[0] * rx).addScaledVector(U, dr.off[1] * fh);
       dr.w = dr.el.offsetWidth; dr.h = dr.el.offsetHeight;
     });
-    if (built) shiftDelays(world, -100);
-    else clock0 = performance.now();
+    if (!built) clock0 = performance.now();
     built = true;
     scene.add(world);
   }
@@ -241,11 +241,12 @@ function start() {
   }, { passive: true });
 
   /* ------------------------------------------------------------ frame */
-  const pos = V(), look = V(), tmp = V(), fwd = V(), right = V(), up = V();
+  const pos = V(), look = V(), tmp = V(), fwd = V(), aim = V(), right = V(), up = V();
   const T1 = V(), T2 = V();
+  let heading = null;
   const lean = { x: 0, y: 0, vx: 0, vy: 0 };
   let last = performance.now();
-  let speed = 0, fov = FOV, roll = 0;
+  let speed = 0, fov = FOV, roll = 0, drawn = -1e6;
   let current = -1;
 
   function frame(now) {
@@ -270,32 +271,47 @@ function start() {
 
     const q = p * (N - 1);
     const s = path.sOf(q);
+
+    // the ink is drawn in as the camera reaches it and stays drawn; on load it draws itself in
+    const opening = clamp(t / 1.9, 0, 1);
+    const introS = path.stopS[0] - 230 + 230 * (1 - Math.pow(1 - opening, 3));
+    drawn = Math.max(drawn, opening < 1 ? Math.min(s, introS) : s);
+    inkUniforms.uDrawn.value = drawn;
     path.at(s, pos);
     path.at(s + 10, look);
 
     // square to the poster when near it
     const n0 = clamp(Math.round(q), 0, N - 1);
     const lock = 1 - smooth(0, 0.28, Math.abs(q - n0));
-    fwd.subVectors(look, pos).normalize().lerp(frames[n0].dir, lock).normalize();
 
-    // lean toward the pointer (spring), a slow breath when idle; calm in flight
-    const calm = 1 - speed;
-    const kx = pointer.x * 0.32 * calm + Math.sin(t * 0.21) * 0.05;
-    const ky = -pointer.y * 0.2 * calm + Math.sin(t * 0.17 + 1.3) * 0.035;
-    lean.vx += ((kx - lean.x) * 14 - lean.vx * 7) * dt;
-    lean.vy += ((ky - lean.y) * 14 - lean.vy * 7) * dt;
+    // where the camera wants to look: the path well ahead, averaged, so bends read as one long turn
+    aim.set(0, 0, 0);
+    for (const ahead of [7, 16, 28]) aim.add(path.at(s + ahead, tmp).sub(pos).normalize());
+    aim.normalize().lerp(frames[n0].dir, lock).normalize();
+    // and it swings toward that, always a beat behind the road
+    if (!heading) heading = aim.clone();
+    heading.lerp(aim, 1 - Math.exp(-dt * (1.9 + lock * 7))).normalize();
+    fwd.copy(heading);
+
+    // the view follows the cursor on a spring: the camera swings around the frame it is
+    // looking at, so the composition holds its place while the depths slide apart
+    const calm = 1 - speed * 0.55;
+    const kx = pointer.x * 1.85 * calm + Math.sin(t * 0.21) * 0.08;
+    const ky = -pointer.y * 1.15 * calm + Math.sin(t * 0.17 + 1.3) * 0.06;
+    lean.vx += ((kx - lean.x) * 9 - lean.vx * 5.4) * dt;
+    lean.vy += ((ky - lean.y) * 9 - lean.vy * 5.4) * dt;
     lean.x += lean.vx * dt;
     lean.y += lean.vy * dt;
     right.crossVectors(fwd, UP).normalize();
     up.crossVectors(right, fwd).normalize();
+    look.copy(pos).addScaledVector(fwd, 12);
     pos.addScaledVector(right, lean.x).addScaledVector(up, lean.y);
-    look.copy(pos).addScaledVector(fwd, 12).addScaledVector(right, -lean.x * 0.25).addScaledVector(up, -lean.y * 0.25);
 
     // bank into turns only while moving
     path.at(s - 6, tmp); T1.subVectors(path.at(s, V()), tmp).normalize();
     path.at(s + 6, tmp); T2.subVectors(tmp, path.at(s, V())).normalize();
     const turn = T1.x * T2.z - T1.z * T2.x;
-    roll += (clamp(turn * 1.8, -0.11, 0.11) * speed - roll) * (1 - Math.exp(-dt * 4));
+    roll += (clamp(turn * 1.5, -0.075, 0.075) * speed - roll) * (1 - Math.exp(-dt * 2.6));
 
     fov += (FOV + speed * 15 - fov) * (1 - Math.exp(-dt * 5));
     const tan = Math.tan(THREE.MathUtils.degToRad(fov / 2));
