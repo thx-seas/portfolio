@@ -3,358 +3,297 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seas — video editor &amp; motion designer</title>
-<meta name="description" content="Seas — video editor and motion designer from Kolomyia, Ukraine. Edits, motion design, AI-generative video, React graphics, color and 3D.">
-<meta property="og:title" content="Seas — video editor &amp; motion designer">
-<meta property="og:description" content="Edits, motion design, AI-generative video, React graphics, color and 3D. Kolomyia, UA — worldwide.">
-<meta name="theme-color" content="#EDEBE6">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EDEBE6'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23141414' stroke-width='1.5'/%3E%3Ccircle cx='32' cy='32' r='13.6' fill='%238A0D08'/%3E%3C/svg%3E">
+<title>Seas | Video editor &amp; motion designer</title>
+<meta name="description" content="Seas is a video editor and motion designer from Kolomyia, Ukraine. Edits, motion design, AI generative video, React graphics, color and 3D.">
+<meta property="og:title" content="Seas | Video editor &amp; motion designer">
+<meta property="og:description" content="Edits, motion design, AI generative video, React graphics, color and 3D. Kolomyia, Ukraine. Working worldwide.">
+<meta name="theme-color" content="#ECEAE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ECEAE4'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23141414' stroke-width='1.5'/%3E%3Ccircle cx='32' cy='32' r='13.6' fill='%237E0C07'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
-<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }</script>
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs"
+} }</script>
 </head>
 <body>
 
 <canvas id="ink" aria-hidden="true"></canvas>
 
 <header class="hud hud--top">
-  <a class="hud__brand" href="#cover" data-go="0">Seas</a>
-  <a class="hud__cta" href="https://t.me/s_3as" target="_blank" rel="noopener">Let's talk ↗</a>
+  <a class="brand" href="#cover" data-go="0">Seas</a>
+  <a class="cta" href="#contact" data-go="4">Let's talk</a>
 </header>
 
 <!--
-  Grid, wide artboard 1440×900: margin 96, 13 columns of 73.8, gutter 24.
-  Column x: 96 · 193.8 · 291.7 · 389.5 · 487.4 · 585.2 · 683.1 · 780.9 · 878.8 · 976.6 · 1074.5 · 1172.3 · 1270.2 → 1344
-  Split 8 | 5: 96–854.8 | 878.8–1344. Header rule 144 · content 168–732 · golden line 516.6 · footer rule 756.
-  Circles ÷φ: 287.5 · 232.6 · 188 · 143.8 · 88.9 · 54.9.  Type ×φ: 12 · 19 · 31 · 51 · 82 · 133 · 300 (display).
-  Tall artboard 390×760: margin 24, 5 columns, header rule 88 · content 112–676 · footer rule 700.
+  Wide artboard 1440×900: margin 96, 13 columns of 73.8 with 24 gutters, split 8 | 5 at 854.8 / 878.8.
+  Content band 168–732, golden line 516.6. Circles step by φ: 287.5 · 232.6 · 188 · 143.8 · 88.9 · 54.9.
+  Tall artboard 390×760: margin 24, content band 88–690.
+  Each poster has one red disc; the flight path passes straight through it to the next poster.
 -->
 
 <main class="stage" id="stage">
 
-  <!-- ============ 00 — COVER ============ -->
-  <section class="poster" id="cover" aria-label="Seas — cover">
+  <!-- ================= COVER ================= -->
+  <section class="poster" id="cover" aria-label="Seas, video editor and motion designer"
+    data-portal="1111.5,400,-7" data-portal-tall="195,262,-7" data-sun="143.8,188,10,3" data-sun-tall="92.7,120,7,2.1">
     <div class="sheet">
 
-      <div class="layer" data-d="-12">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+      <div class="layer" data-d="-14">
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
           <circle class="o" cx="1111.5" cy="400" r="232.6"/>
-          <circle class="o o--dash" cx="1111.5" cy="400" r="287.5"/>
-          <path class="o o--thick" d="M841.3 301.7A287.5 287.5 0 0 1 946.6 164.5"/>
-          <path class="o o--red" d="M1330.1 479.6A232.6 232.6 0 0 1 1227.8 601.4"/>
-          <line class="a" x1="824" y1="400" x2="1399" y2="400"/>
-          <line class="a" x1="1111.5" y1="112.5" x2="1111.5" y2="687.5"/>
-          <circle class="ring" cx="1399" cy="400" r="3.5"/>
-          <circle class="dotf" cx="1111.5" cy="112.5" r="2.5"/>
+          <circle class="o dash" cx="1111.5" cy="400" r="287.5"/>
+          <path class="o heavy" d="M841.3 301.7A287.5 287.5 0 0 1 946.6 164.5"/>
+          <path class="o red" d="M1330.1 479.6A232.6 232.6 0 0 1 1227.8 601.4"/>
+          <line class="a" x1="790" y1="400" x2="1399" y2="400"/>
+          <line class="a" x1="1111.5" y1="96" x2="1111.5" y2="704"/>
+          <circle class="node" cx="1399" cy="400" r="3.5"/>
+          <circle class="node" cx="790" cy="400" r="3.5"/>
+          <circle class="pin" cx="1111.5" cy="112.5" r="2.5"/>
           <text class="lbl" x="1123.5" y="126">ø 575</text>
         </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
+        <svg class="draft tall" viewBox="0 0 390 760" aria-hidden="true">
           <circle class="o" cx="195" cy="262" r="150"/>
-          <circle class="o o--dash" cx="195" cy="262" r="176"/>
+          <circle class="o dash" cx="195" cy="262" r="176"/>
           <line class="a" x1="24" y1="262" x2="366" y2="262"/>
+          <circle class="node" cx="366" cy="262" r="3"/>
         </svg>
-        <p class="at fs hv outline echo hide-tall" style="--x:96;--y:452;--fs:300" aria-hidden="true">Seas</p>
+        <p class="at fs x echo wide-only" style="--x:90;--y:488;--fs:290" aria-hidden="true">SEAS</p>
       </div>
 
-      <div class="layer" data-d="-6">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-cw" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="3" class="dot"/></pattern></defs>
-          <circle cx="1111.5" cy="400" r="188" fill="url(#ht-cw)"/>
-          <circle class="disc" cx="1111.5" cy="400" r="143.8"/>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="ht-ct" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.1" class="dot"/></pattern></defs>
-          <circle cx="195" cy="262" r="120" fill="url(#ht-ct)"/>
-          <circle class="disc" cx="195" cy="262" r="92.7"/>
-        </svg>
-      </div>
 
       <div class="layer" data-d="0">
-        <p class="at w fs role" style="--x:96;--y:204;--w:758.8;--fs:31;--tx:24;--ty:436;--tw:342;--tfs:19">Video editor &amp; motion designer</p>
-        <h1 class="at fs hv name" style="--x:84;--y:268;--fs:300;--tx:18;--ty:470;--tfs:136"><span class="sr-only">Seas — video editor &amp; motion designer</span><span aria-hidden="true">Seas</span></h1>
-        <p class="at w fs body" style="--x:878.8;--y:656;--w:465.2;--fs:19;--tx:24;--ty:604;--tw:342;--tfs:14">
-          Every frame earns its place. Timing, easing, color — and the cut that lands exactly on the beat.
+        <p class="at w fs capsule" style="--x:96;--y:168;--w:758.8;--fs:17;--tx:24;--ty:88;--tw:342;--tfs:11">
+          <span>Video editor</span><i>&amp;</i><span>motion designer</span>
+        </p>
+        <h1 class="at fs x name" style="--x:84;--y:296;--fs:290;--tx:14;--ty:452;--tfs:150">
+          <span class="sr-only">Seas, video editor and motion designer</span>
+          <span class="ln" aria-hidden="true"><span>SEAS</span></span>
+        </h1>
+        <p class="at w fs body fade" style="--x:878.8;--y:628;--w:465.2;--fs:19;--tx:24;--ty:598;--tw:342;--tfs:15">
+          Every frame earns its place. Timing, easing, color, and the cut that lands exactly on the beat.
         </p>
       </div>
 
-      <div class="layer" data-d="4">
-        <div class="frame">
-          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
-          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
-          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>00</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
-          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Cover</p>
-          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
-          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
-          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Scroll to fly ↓</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
-          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">00 / 04</p>
-        </div>
+      <div class="layer" data-d="3">
+        <p class="at w fs rail wide-only" style="--x:96;--y:720;--w:1248;--fs:13">
+          <span>Edits</span><i>✦</i><span>Motion design</span><i>✦</i><span>AI generative</span><i>✦</i><span>React graphics</span><i>✦</i><span>Color</span><i>✦</i><span>3D</span>
+        </p>
       </div>
 
     </div>
   </section>
 
-  <!-- ============ 01 — PROFILE ============ -->
-  <section class="poster" id="profile" aria-labelledby="profile-title">
+  <!-- ================= ABOUT ================= -->
+  <section class="poster" id="about" aria-labelledby="about-title"
+    data-portal="239.7,488.9,-12" data-portal-tall="140,352,-12" data-sun="143.8,188,10,3" data-sun-tall="62,82,7,2.1">
     <div class="sheet">
 
       <div class="layer" data-d="-12">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-pw" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="3" class="dot"/></pattern></defs>
-          <circle cx="239.7" cy="488.9" r="188" fill="url(#ht-pw)"/>
-          <circle class="disc" cx="239.7" cy="488.9" r="143.8"/>
-          <circle class="o o--dash" cx="328.6" cy="400" r="287.5"/>
-          <line class="a" x1="41" y1="400" x2="616" y2="400"/>
-          <line class="a" x1="328.6" y1="112.5" x2="328.6" y2="687.5"/>
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <circle class="o dash" cx="328.6" cy="400" r="287.5"/>
+          <line class="a" x1="20" y1="400" x2="637" y2="400"/>
+          <line class="a" x1="328.6" y1="96" x2="328.6" y2="704"/>
+          <circle class="node" cx="637" cy="400" r="3.5"/>
           <text class="lbl" x="340.6" y="126">ø 575</text>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="ht-pt" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.1" class="dot"/></pattern></defs>
-          <circle cx="137.7" cy="319.3" r="120" fill="url(#ht-pt)"/>
-          <circle class="disc" cx="137.7" cy="319.3" r="92.7"/>
         </svg>
       </div>
 
       <div class="layer" data-d="-6">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
           <defs><pattern id="hatch-w" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" class="hatch"/></pattern></defs>
           <circle cx="328.6" cy="400" r="232.6" class="paperfill"/>
           <circle cx="328.6" cy="400" r="232.6" fill="url(#hatch-w)"/>
-          <circle class="o o--strong" cx="328.6" cy="400" r="232.6"/>
-          <line class="a" x1="96" y1="400" x2="561.2" y2="400"/>
-          <text class="lbl" x="328.6" y="388" text-anchor="middle">portrait — placeholder</text>
+          <circle class="o strong" cx="328.6" cy="400" r="232.6"/>
+          <path class="o heavy" d="M131.2 276.9A232.6 232.6 0 0 1 244.5 183.1"/>
         </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
+        <svg class="draft tall" viewBox="0 0 390 760" aria-hidden="true">
           <defs><pattern id="hatch-t" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch"/></pattern></defs>
-          <circle cx="195" cy="262" r="150" class="paperfill"/>
-          <circle cx="195" cy="262" r="150" fill="url(#hatch-t)"/>
-          <circle class="o o--strong" cx="195" cy="262" r="150"/>
-          <text class="lbl" x="195" y="266" text-anchor="middle">portrait</text>
+          <circle cx="232" cy="306" r="104" class="paperfill"/>
+          <circle cx="232" cy="306" r="104" fill="url(#hatch-t)"/>
+          <circle class="o strong" cx="232" cy="306" r="104"/>
         </svg>
+        <p class="at fs pict" style="--x:328.6;--y:392;--fs:11;--tx:232;--ty:302;--tfs:9">Portrait</p>
       </div>
 
       <div class="layer" data-d="0">
-        <h2 class="at fs hv title" id="profile-title" style="--x:578;--y:168;--fs:133;--tx:20;--ty:436;--tfs:82">About</h2>
-        <p class="at w fs lede" style="--x:585.2;--y:341;--w:758.8;--fs:31;--tx:24;--ty:520;--tw:342;--tfs:17">
-          I'm Seas — a video editor and motion designer from Kolomyia, Ukraine. I care about the details most people never notice: timing, easing, color, and the cut that lands exactly on the beat.
+        <h2 class="at w fs x title" id="about-title" style="--x:585.2;--y:168;--w:758.8;--fs:78;--tx:24;--ty:430;--tw:342;--tfs:38">
+          <span class="ln" style="--i:0"><span>The details</span></span>
+          <span class="ln" style="--i:1"><span>most people</span></span>
+          <span class="ln" style="--i:2"><span>never notice.</span></span>
+        </h2>
+        <p class="at w fs lede fade" style="--x:585.2;--y:444;--w:660;--fs:24;--tx:24;--ty:568;--tw:342;--tfs:15">
+          I'm Seas, a video editor and motion designer from Kolomyia, Ukraine. I care about timing, easing, color, and the cut that lands exactly on the beat.
         </p>
-        <dl class="at w fs facts hide-tall" style="--x:585.2;--y:660;--w:758.8;--fs:19">
+        <dl class="at w fs facts fade" style="--x:585.2;--y:640;--w:758.8;--fs:17;--tx:24;--ty:88;--tw:342;--tfs:12">
           <div><dt>Base</dt><dd>After Effects</dd></div>
-          <div><dt>Tools</dt><dd>Resolve, Blender</dd></div>
+          <div><dt>Tools</dt><dd>Resolve, Blender, Remotion</dd></div>
           <div><dt>Since</dt><dd>2024</dd></div>
-          <div><dt>Status</dt><dd>Open for work</dd></div>
+          <div><dt>Status</dt><dd class="live">Open for work</dd></div>
         </dl>
       </div>
 
-      <div class="layer" data-d="4">
-        <div class="frame">
-          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
-          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
-          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>01</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
-          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Profile</p>
-          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
-          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
-          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
-          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">01 / 04</p>
-        </div>
+      <div class="layer" data-d="3">
+        <p class="at fs credit wide-only" style="--x:96;--y:704;--fs:11"><span>Pict by</span> <b>Seas</b></p>
       </div>
 
     </div>
   </section>
 
-  <!-- ============ 02 — FIELDS ============ -->
-  <section class="poster" id="fields" aria-labelledby="fields-title">
+  <!-- ================= FIELDS ================= -->
+  <section class="poster" id="fields" aria-labelledby="fields-title"
+    data-portal="487.4,677.1,-12" data-portal-tall="330,150,-12" data-sun="54.9,72,8,2.4" data-sun-tall="30,40,6,1.8">
     <div class="sheet">
 
       <div class="layer" data-d="-12">
-        <h2 class="at fs hv vword hide-tall" id="fields-title" style="--x:96;--y:168;--fs:190">Fields</h2>
-        <p class="at mono vnote hide-tall" style="--x:396;--y:168">Different industries <i>✦</i> one habit: every frame has a reason to be there</p>
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-fw" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.4" class="dot"/></pattern></defs>
-          <circle cx="487.4" cy="677.1" r="72" fill="url(#ht-fw)"/>
-          <circle class="disc" cx="487.4" cy="677.1" r="54.9"/>
+        <p class="at fs x vword wide-only" style="--x:96;--y:168;--fs:196" aria-hidden="true">FIELDS</p>
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
           <circle class="o" cx="487.4" cy="677.1" r="88.9"/>
+          <line class="a" x1="487.4" y1="168" x2="487.4" y2="560"/>
+          <circle class="node" cx="487.4" cy="168" r="3.5"/>
+        </svg>
+        <svg class="draft tall" viewBox="0 0 390 760" aria-hidden="true">
+          <circle class="o" cx="330" cy="150" r="50"/>
         </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <h2 class="at fs hv title show-tall-block" style="--x:24;--y:112;--fs:82" aria-hidden="true">Fields</h2>
-        <ol class="at w fs fields" style="--x:585.2;--y:168;--w:758.8;--fs:19;--tx:24;--ty:208;--tw:342;--tfs:14">
-          <li><span class="n">01</span><h3 class="hv">Edits</h3><p>Shorts, reels, ads and long-form. Rhythm first.</p><span class="k">Premiere · Resolve</span></li>
-          <li><span class="n">02</span><h3 class="hv">Motion design</h3><p>Kinetic type, explainers, title sequences.</p><span class="k">After Effects</span></li>
-          <li><span class="n">03</span><h3 class="hv">AI generative</h3><p>Generated image and video inside real edits.</p><span class="k">Veo · Kling</span></li>
-          <li><span class="n">04</span><h3 class="hv">React graphics</h3><p>Code-driven video: templates and whole series.</p><span class="k">Remotion</span></li>
-          <li><span class="n">05</span><h3 class="hv">Color</h3><p>Grading and looks that hold across a series.</p><span class="k">Resolve</span></li>
-          <li><span class="n">06</span><h3 class="hv">3D</h3><p>Scenes, product shots and simulations.</p><span class="k">Blender</span></li>
+        <h2 class="at fs x title sr-wide" id="fields-title" style="--x:585.2;--y:120;--fs:12;--tx:20;--ty:104;--tfs:74">
+          <span class="ln"><span>FIELDS</span></span>
+        </h2>
+        <ol class="at w fs fields" style="--x:585.2;--y:168;--w:758.8;--fs:15;--tx:24;--ty:200;--tw:342;--tfs:12">
+          <li style="--i:0"><h3 class="x">Edits</h3><p>Shorts, reels, ads and long-form. Rhythm first.</p><span class="tag">Premiere, Resolve</span></li>
+          <li style="--i:1"><h3 class="x">Motion design</h3><p>Kinetic type, explainers, title sequences.</p><span class="tag">After Effects</span></li>
+          <li style="--i:2"><h3 class="x">AI generative</h3><p>Generated image and video inside real edits.</p><span class="tag">Veo, Kling</span></li>
+          <li style="--i:3"><h3 class="x">React graphics</h3><p>Code-driven video, templates and whole series.</p><span class="tag">Remotion</span></li>
+          <li style="--i:4"><h3 class="x">Color</h3><p>Grades and looks that hold across a series.</p><span class="tag">Resolve</span></li>
+          <li style="--i:5"><h3 class="x">3D</h3><p>Scenes, product shots and simulations.</p><span class="tag">Blender</span></li>
         </ol>
       </div>
 
-      <div class="layer" data-d="4">
-        <div class="frame">
-          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
-          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
-          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>02</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
-          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Fields</p>
-          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
-          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
-          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
-          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">02 / 04</p>
-        </div>
+      <div class="layer" data-d="3">
+        <p class="at w fs caption wide-only" style="--x:585.2;--y:732;--w:758.8;--fs:11"><span>Different industries, one habit</span><i></i><span>every frame has a reason</span></p>
       </div>
 
     </div>
   </section>
 
-  <!-- ============ 03 — WORKS ============ -->
-  <section class="poster" id="works" aria-labelledby="works-title">
+  <!-- ================= WORKS ================= -->
+  <section class="poster" id="works" aria-labelledby="works-title"
+    data-portal="475.4,409.4,-6" data-portal-tall="195,296,-6" data-sun="54.9,72,8,2.4" data-sun-tall="34,34,6,1.8" data-dom-sun>
     <div class="sheet">
 
-      <div class="layer" data-d="-15">
-        <p class="at fs hv outline echo ar hide-tall" style="--x:1356;--y:500;--fs:300" aria-hidden="true">06</p>
-      </div>
-
-      <div class="layer" data-d="-10">
-        <figure class="at w fs work hide-tall" style="--x:878.8;--y:168;--w:465.2;--fs:19">
-          <div class="work__frame"><span class="mono">work_02.mp4</span></div>
-          <figcaption><span class="mono">02 — Motion — 2026</span><b class="hv">Untitled motion</b></figcaption>
-        </figure>
-      </div>
-
-      <div class="layer" data-d="-5">
-        <figure class="at w fs work work--hero" style="--x:96;--y:305.2;--w:758.8;--fs:19;--tx:24;--ty:208;--tw:342;--tfs:14">
-          <div class="work__frame"><span class="mono">work_01.mp4 — untitled reel — edit — 2026</span></div>
-        </figure>
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-ww" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.4" class="dot"/></pattern></defs>
-          <circle cx="475.4" cy="518.6" r="72" fill="url(#ht-ww)"/>
-          <circle class="disc" cx="475.4" cy="518.6" r="54.9"/>
-          <path class="play" d="M462 496L500 518.6L462 541.2Z"/>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <circle class="disc" cx="195" cy="304.2" r="33.9"/>
-          <path class="play" d="M187 290L210 304.2L187 318.4Z"/>
-        </svg>
-      </div>
-
-      <div class="layer" data-d="0">
-        <h2 class="at fs hv title" id="works-title" style="--x:89;--y:168;--fs:133;--tx:20;--ty:112;--tfs:82">Works</h2>
-        <ol class="at w fs list" style="--x:878.8;--y:540;--w:465.2;--fs:19;--tx:24;--ty:432;--tw:342;--tfs:14">
-          <li class="show-tall"><span class="n">02</span><b>Untitled motion</b><span class="k">Motion</span></li>
-          <li><span class="n">03</span><b>Untitled gen</b><span class="k">AI generative</span></li>
-          <li><span class="n">04</span><b>Untitled series</b><span class="k">React graphics</span></li>
-          <li><span class="n">05</span><b>Untitled grade</b><span class="k">Color</span></li>
-          <li><span class="n">06</span><b>Untitled scene</b><span class="k">3D</span></li>
-        </ol>
-      </div>
-
-      <div class="layer" data-d="4">
-        <div class="frame">
-          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
-          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
-          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>03</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
-          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Works — placeholders</p>
-          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
-          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
-          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">Video editor &amp; motion designer</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:768">16 : 9 — 1920 × 1080 — 25 fps</p>
-          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">03 / 04</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ============ 04 — CONTACT ============ -->
-  <section class="poster" id="contact" aria-labelledby="contact-title">
-    <div class="sheet">
-
-      <div class="layer" data-d="-12">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <circle class="o o--dash" cx="1111.5" cy="400" r="287.5"/>
-          <line class="a" x1="824" y1="400" x2="1399" y2="400"/>
-          <line class="a" x1="1111.5" y1="112.5" x2="1111.5" y2="687.5"/>
-          <circle class="ring" cx="824" cy="400" r="3.5"/>
-          <text class="lbl" x="1123.5" y="126">ø 575</text>
-        </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <circle class="o o--dash" cx="195" cy="262" r="176"/>
-        </svg>
-        <p class="at fs hv outline echo hide-tall" style="--x:193.8;--y:352;--fs:133" aria-hidden="true">the cut.</p>
-      </div>
 
       <div class="layer" data-d="-6">
-        <svg class="draft draft--wide" viewBox="0 0 1440 900" aria-hidden="true">
-          <defs><pattern id="ht-xw" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="3.8" class="dot"/></pattern></defs>
-          <circle cx="1111.5" cy="400" r="232.6" fill="url(#ht-xw)"/>
-          <circle class="disc" cx="1111.5" cy="400" r="188"/>
+        <figure class="at w fs work hero" style="--x:96;--y:196;--w:758.8;--fs:15;--tx:24;--ty:200;--tw:342;--tfs:12">
+          <div class="frame"><span class="tc">00:00:00:00</span></div>
+        </figure>
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <defs><pattern id="ht-ww" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.4" class="dot"/></pattern></defs>
+          <circle cx="475.4" cy="409.4" r="72" fill="url(#ht-ww)"/>
+          <circle class="disc" cx="475.4" cy="409.4" r="54.9"/>
+          <path class="play" d="M462 387L500 409.4L462 431.8Z"/>
         </svg>
-        <svg class="draft draft--tall" viewBox="0 0 390 760" aria-hidden="true">
-          <defs><pattern id="ht-xt" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.2" class="dot"/></pattern></defs>
-          <circle cx="195" cy="262" r="150" fill="url(#ht-xt)"/>
-          <circle class="disc" cx="195" cy="262" r="120"/>
+        <svg class="draft tall" viewBox="0 0 390 760" aria-hidden="true">
+          <circle class="disc" cx="195" cy="296" r="34"/>
+          <path class="play" d="M187 282L210 296L187 310Z"/>
         </svg>
       </div>
 
       <div class="layer" data-d="0">
-        <dl class="at fs credits hide-tall" style="--x:96;--y:168;--fs:12">
-          <dt>Directed by</dt><dd>You</dd>
-          <dt>Edited &amp; graded</dt><dd>Seas</dd>
-          <dt>Year</dt><dd>2026</dd>
-        </dl>
-        <h2 class="at fs hv title" id="contact-title" style="--x:89;--y:232;--fs:133;--tx:20;--ty:436;--tfs:51">Let's make<br>the cut.</h2>
-
-        <ul class="at w fs links" style="--x:96;--y:541;--w:758.8;--fs:19;--tx:24;--ty:548;--tw:342;--tfs:14">
-          <li><a class="link" href="https://t.me/s_3as" target="_blank" rel="noopener"><span class="mono">Telegram</span><b class="hv">@s_3as</b><span class="mono go">Write ↗</span></a></li>
-          <li><a class="link" href="https://t.me/tyses" target="_blank" rel="noopener"><span class="mono">Channel</span><b class="hv">@tyses</b><span class="mono go">Open ↗</span></a></li>
-          <li><button class="link" type="button" data-copy="._.seas"><span class="mono">Discord</span><b class="hv">._.seas</b><span class="mono go" data-copy-label>Copy</span></button></li>
-          <li><a class="link" href="https://ko-fi.com/seas" target="_blank" rel="noopener"><span class="mono">Ko-fi</span><b class="hv">ko-fi.com/seas</b><span class="mono go">Open ↗</span></a></li>
-        </ul>
-        <p class="at w fs body hide-tall" style="--x:878.8;--y:656;--w:367.4;--fs:19">
-          Commissions open, worldwide. Replies within a day.
+        <h2 class="at fs x title" id="works-title" style="--x:872;--y:168;--fs:132;--tx:20;--ty:104;--tfs:74">
+          <span class="ln"><span>WORKS</span></span>
+        </h2>
+        <p class="at w fs rail small" style="--x:96;--y:646;--w:758.8;--fs:12;--tx:24;--ty:406;--tw:342;--tfs:10">
+          <span>Showreel</span><i>✦</i><span>Edit</span><i>✦</i><span>2026</span><i>✦</i><span>Placeholder</span>
         </p>
-        <p class="at fs hv fin ar hide-tall" style="--x:1344;--y:690;--fs:51" aria-hidden="true">Fin.</p>
+        <ol class="at w fs list" style="--x:878.8;--y:318;--w:465.2;--fs:17;--tx:24;--ty:450;--tw:342;--tfs:13">
+          <li style="--i:0"><i class="thumb"></i><b>Untitled motion</b><span>Motion</span></li>
+          <li style="--i:1"><i class="thumb"></i><b>Untitled gen</b><span>AI generative</span></li>
+          <li style="--i:2"><i class="thumb"></i><b>Untitled series</b><span>React</span></li>
+          <li style="--i:3"><i class="thumb"></i><b>Untitled grade</b><span>Color</span></li>
+          <li style="--i:4"><i class="thumb"></i><b>Untitled scene</b><span>3D</span></li>
+        </ol>
       </div>
 
-      <div class="layer" data-d="4">
-        <div class="frame">
-          <i class="at margin hide-tall" style="--x:60;--y:144"></i>
-          <p class="at mono vtext hide-tall" style="--x:40;--y:756">Portfolio — vol. 05 — Kolomyia, UA — MMXXVI</p>
-          <p class="at mono" style="--x:96;--y:120;--tx:24;--ty:64"><i class="sq"></i>04</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:120">Seas — portfolio 2026</p>
-          <p class="at mono ar" style="--x:1344;--y:120;--tx:366;--ty:64">Contact</p>
-          <i class="at w rule" style="--x:96;--y:144;--w:1248;--tx:24;--ty:88;--tw:342"></i>
-          <i class="at w rule" style="--x:96;--y:756;--w:1248;--tx:24;--ty:700;--tw:342"></i>
-          <p class="at mono" style="--x:96;--y:768;--tx:24;--ty:712">© Seas 2026</p>
-          <p class="at mono hide-tall" style="--x:878.8;--y:768">48.53° N — 25.04° E</p>
-          <p class="at mono ar" style="--x:1344;--y:768;--tx:366;--ty:712">04 / 04</p>
-        </div>
+      <div class="layer" data-d="3">
+        <p class="at w fs caption wide-only" style="--x:878.8;--y:640;--w:465.2;--fs:11"><span>Six slots</span><i></i><span>real cuts land here soon</span></p>
       </div>
 
     </div>
   </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="poster" id="contact" aria-labelledby="contact-title"
+    data-portal="1111.5,400,-6" data-portal-tall="195,250,-6" data-sun="188,232.6,12,3.8" data-sun-tall="104,130,7,2.2">
+    <div class="sheet">
+
+      <div class="layer" data-d="-12">
+        <svg class="draft wide" viewBox="0 0 1440 900" aria-hidden="true">
+          <circle class="o dash" cx="1111.5" cy="400" r="287.5"/>
+          <path class="o heavy" d="M1360.5 256.3A287.5 287.5 0 0 1 1395.6 453"/>
+          <line class="a" x1="790" y1="400" x2="1420" y2="400"/>
+          <line class="a" x1="1111.5" y1="96" x2="1111.5" y2="704"/>
+          <circle class="node" cx="790" cy="400" r="3.5"/>
+          <text class="lbl" x="1123.5" y="126">ø 575</text>
+        </svg>
+        <svg class="draft tall" viewBox="0 0 390 760" aria-hidden="true">
+          <circle class="o dash" cx="195" cy="250" r="160"/>
+        </svg>
+        <p class="at fs x echo wide-only" style="--x:88;--y:398;--fs:124" aria-hidden="true">THE CUT.</p>
+      </div>
+
+
+      <div class="layer" data-d="0">
+        <dl class="at fs credits roll wide-only" style="--x:96;--y:168;--fs:11">
+          <div><dt>Directed by</dt><dd>You</dd></div>
+          <div><dt>Edited &amp; graded</dt><dd>Seas</dd></div>
+          <div><dt>Year</dt><dd>2026</dd></div>
+        </dl>
+        <h2 class="at fs x title" id="contact-title" style="--x:88;--y:236;--fs:124;--tx:20;--ty:418;--tfs:54">
+          <span class="ln" style="--i:0"><span>LET'S MAKE</span></span>
+          <span class="ln" style="--i:1"><span>THE CUT.</span></span>
+        </h2>
+        <ul class="at w fs links" style="--x:96;--y:512;--w:758.8;--fs:15;--tx:24;--ty:540;--tw:342;--tfs:11">
+          <li style="--i:0"><a class="link" href="https://t.me/s_3as" target="_blank" rel="noopener"><span class="k">Telegram</span><b class="x">@s_3as</b><span class="go">Write</span></a></li>
+          <li style="--i:1"><a class="link" href="https://t.me/tyses" target="_blank" rel="noopener"><span class="k">Channel</span><b class="x">@tyses</b><span class="go">Open</span></a></li>
+          <li style="--i:2"><button class="link" type="button" data-copy="._.seas"><span class="k">Discord</span><b class="x">._.seas</b><span class="go" data-copy-label>Copy</span></button></li>
+          <li style="--i:3"><a class="link" href="https://ko-fi.com/seas" target="_blank" rel="noopener"><span class="k">Ko-fi</span><b class="x">ko-fi.com/seas</b><span class="go">Open</span></a></li>
+        </ul>
+        <p class="at w fs body fade wide-only" style="--x:878.8;--y:668;--w:340;--fs:17">Commissions open, worldwide. Replies within a day.</p>
+      </div>
+
+      <div class="layer" data-d="3">
+        <p class="at fs x fin ar wide-only" style="--x:1344;--y:690;--fs:54" aria-hidden="true">FIN.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- the slogan, word by word, drifting past between posters -->
+  <div class="drifts" aria-hidden="true">
+    <p class="drift x" data-gap="0" data-t="0.74" data-off="-0.8,0.45" style="--fs:260">Timing</p>
+    <p class="drift x" data-gap="1" data-t="0.72" data-off="0.85,-0.4" style="--fs:260">Easing</p>
+    <p class="drift x" data-gap="2" data-t="0.74" data-off="-0.85,-0.45" style="--fs:260">Color</p>
+    <p class="drift x red" data-gap="3" data-t="0.72" data-off="0.8,0.5" style="--fs:260">The beat.</p>
+  </div>
 
 </main>
 
 <nav class="hud hud--bot" aria-label="Sections">
   <div class="progress" aria-hidden="true"><i id="progress"></i></div>
-  <div class="hud__stops" id="stops">
-    <a href="#cover" data-go="0">00 Cover</a>
-    <a href="#profile" data-go="1">01 Profile</a>
-    <a href="#fields" data-go="2">02 Fields</a>
-    <a href="#works" data-go="3">03 Works</a>
-    <a href="#contact" data-go="4">04 Contact</a>
+  <div class="stops" id="stops">
+    <a href="#cover" data-go="0">Seas</a>
+    <a href="#about" data-go="1">About</a>
+    <a href="#fields" data-go="2">Fields</a>
+    <a href="#works" data-go="3">Works</a>
+    <a href="#contact" data-go="4">Contact</a>
   </div>
 </nav>
 
-<div class="paper" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 <div id="spacer" aria-hidden="true"></div>
 
 <script type="module" src="assets/js/main.js"></script>
