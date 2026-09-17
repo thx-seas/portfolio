@@ -162,7 +162,7 @@ function start() {
         shared: { uDrawn: inkUniforms.uDrawn, uSunFogFar: inkUniforms.uSunFogFar },
         center: portals[i], frame: frames[i],
         disc: po.sun.disc * k, outer: po.sun.outer * k, cell: po.sun.cell * k, dot: po.sun.dot * k,
-        draw: [path.portalS[i] - 78, 34],
+        draw: [path.portalS[i] - 112, 74],
       });
     });
     suns.forEach((m) => scene.add(m));
@@ -273,8 +273,8 @@ function start() {
     const s = path.sOf(q);
 
     // the ink is drawn in as the camera reaches it and stays drawn; on load it draws itself in
-    const opening = clamp(t / 1.9, 0, 1);
-    const introS = path.stopS[0] - 230 + 230 * (1 - Math.pow(1 - opening, 3));
+    const opening = clamp(t / 4, 0, 1);
+    const introS = path.stopS[0] - 300 + 300 * opening * opening * (3 - 2 * opening);
     drawn = Math.max(drawn, opening < 1 ? Math.min(s, introS) : s);
     inkUniforms.uDrawn.value = drawn;
     path.at(s, pos);

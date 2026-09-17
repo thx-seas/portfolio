@@ -18,7 +18,7 @@ export function buildWorld({ material, path, frames, board, posters, tall, aspec
   const mobile = tall || board.W < 700;
 
   /* ink draws itself as the camera comes up on it: from LEAD ahead, over OVER of travel */
-  const LEAD = 78, OVER = 34, LINE_LEAD = 190;
+  const LEAD = 112, OVER = 74, LINE_LEAD = 190;
   const drawAt = (s) => [s - LEAD, OVER];
 
   /* ---- text keeps clear: world point → is it over type on the poster it is seen from? ---- */
