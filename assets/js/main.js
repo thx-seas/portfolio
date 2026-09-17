@@ -242,7 +242,7 @@ function start() {
 
   /* ------------------------------------------------------------ frame */
   const pos = V(), look = V(), tmp = V(), fwd = V(), aim = V(), right = V(), up = V();
-  const T1 = V(), T2 = V();
+  const T1 = V(), T2 = V(), hvel = V(), err = V();
   let heading = null;
   const lean = { x: 0, y: 0, vx: 0, vy: 0 };
   let last = performance.now();
@@ -282,30 +282,33 @@ function start() {
 
     // square to the poster when near it
     const n0 = clamp(Math.round(q), 0, N - 1);
-    const lock = 1 - smooth(0, 0.28, Math.abs(q - n0));
+    const lock = 1 - smooth(0, 0.5, Math.abs(q - n0));
 
-    // where the camera wants to look: the path well ahead, averaged, so bends read as one long turn
+    // where the camera wants to look: far down the path, averaged, so the dive into a
+    // poster's disc is something it slides through rather than a corner it takes
     aim.set(0, 0, 0);
-    for (const ahead of [7, 16, 28]) aim.add(path.at(s + ahead, tmp).sub(pos).normalize());
+    for (const ahead of [20, 42, 70]) aim.add(path.at(s + ahead, tmp).sub(pos).normalize());
     aim.normalize().lerp(frames[n0].dir, lock).normalize();
-    // and it swings toward that, always a beat behind the road
+    // and it swings onto that on a spring, so a turn eases in and eases out
     if (!heading) heading = aim.clone();
-    heading.lerp(aim, 1 - Math.exp(-dt * (1.9 + lock * 7))).normalize();
+    err.copy(aim).sub(heading);
+    hvel.addScaledVector(err, (8 + lock * 10) * dt).addScaledVector(hvel, -6 * dt);
+    heading.addScaledVector(hvel, dt).normalize();
     fwd.copy(heading);
 
-    // the view follows the cursor on a spring: the camera swings around the frame it is
-    // looking at, so the composition holds its place while the depths slide apart
+    // the view turns toward the cursor on a quick spring: the camera looks around from
+    // where it stands, with a touch of travel for parallax between the depths
     const calm = 1 - speed * 0.55;
-    const kx = pointer.x * 1.85 * calm + Math.sin(t * 0.21) * 0.08;
-    const ky = -pointer.y * 1.15 * calm + Math.sin(t * 0.17 + 1.3) * 0.06;
-    lean.vx += ((kx - lean.x) * 9 - lean.vx * 5.4) * dt;
-    lean.vy += ((ky - lean.y) * 9 - lean.vy * 5.4) * dt;
+    const kx = pointer.x * 1.25 * calm + Math.sin(t * 0.21) * 0.06;
+    const ky = -pointer.y * 0.8 * calm + Math.sin(t * 0.17 + 1.3) * 0.045;
+    lean.vx += ((kx - lean.x) * 30 - lean.vx * 10.5) * dt;
+    lean.vy += ((ky - lean.y) * 30 - lean.vy * 10.5) * dt;
     lean.x += lean.vx * dt;
     lean.y += lean.vy * dt;
     right.crossVectors(fwd, UP).normalize();
     up.crossVectors(right, fwd).normalize();
-    look.copy(pos).addScaledVector(fwd, 12);
-    pos.addScaledVector(right, lean.x).addScaledVector(up, lean.y);
+    look.copy(pos).addScaledVector(fwd, 12).addScaledVector(right, lean.x).addScaledVector(up, lean.y);
+    pos.addScaledVector(right, lean.x * 0.2).addScaledVector(up, lean.y * 0.14);
 
     // bank into turns only while moving
     path.at(s - 6, tmp); T1.subVectors(path.at(s, V()), tmp).normalize();
