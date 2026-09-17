@@ -7,11 +7,11 @@
    ========================================================================== */
 import * as THREE from 'three';
 import Lenis from 'lenis';
-import { V, UP, clamp, smooth, F, FOV, TAN0, posterFrames, makeBoard, buildPath } from './path.js';
-import { makeInkMaterial } from './ink.js';
-import { buildWorld } from './world.js';
-import { makePrint } from './print.js';
-import { makeSun } from './suns.js';
+import { V, UP, clamp, smooth, F, FOV, TAN0, posterFrames, makeBoard, buildPath } from './path.js?v=6';
+import { makeInkMaterial } from './ink.js?v=6';
+import { buildWorld } from './world.js?v=6';
+import { makePrint } from './print.js?v=6';
+import { makeSun } from './suns.js?v=6';
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TALL = matchMedia('(max-aspect-ratio: 4/5)');

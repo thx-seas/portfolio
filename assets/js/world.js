@@ -3,8 +3,8 @@
    - bursts: the shaggy explosion of pointed strokes around each poster's red disc
    - brush arcs: big dry-brush circles you fly through between posters
    - speed strokes and ink specks streaming past the camera */
-import { V, clamp, smooth, lerp, rng, F } from './path.js';
-import { InkBatch, PLATE, blade, brush } from './ink.js';
+import { V, clamp, smooth, lerp, rng, F } from './path.js?v=6';
+import { InkBatch, PLATE, blade, brush } from './ink.js?v=6';
 
 const TAU = Math.PI * 2;
 

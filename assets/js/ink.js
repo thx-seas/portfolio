@@ -4,7 +4,7 @@
    (print.js) lays both plates on paper, so the red can slip out of register
    when the camera moves fast, the way a print does. */
 import * as THREE from 'three';
-import { V, clamp } from './path.js';
+import { V, clamp } from './path.js?v=6';
 
 export function makeInkMaterial(uniforms) {
   return new THREE.ShaderMaterial({
