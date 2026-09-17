@@ -24,8 +24,8 @@ export const F = 12;            // camera → poster plane at a stop
 export const FOV = 44;
 export const TAN0 = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 const GAP = 92;
-const YAW = [0, 0.46, -0.15, 0.38, -0.08];
-const PITCH = [0, 0.06, -0.05, 0.05, 0];
+const YAW = [0, 0.2, -0.07, 0.17, -0.04];
+const PITCH = [0, 0.03, -0.025, 0.025, 0];
 
 export function posterFrames(n) {
   const frames = [];

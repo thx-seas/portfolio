@@ -152,7 +152,11 @@ function start() {
       info.forEach((po) => po.rects.push(box));
     });
     const portals = info.map((po, i) => board.point(i, po.portal.x, po.portal.y, po.portal.d));
-    path = buildPath(frames, portals);
+    // the path goes through each disc, but pulled back toward the poster's own axis,
+    // so the dive into it is a lean rather than a corner
+    const onPath = portals.map((O, i) => frames[i].P.clone()
+      .addScaledVector(frames[i].dir, -info[i].portal.d).lerp(O, 0.78));
+    path = buildPath(frames, onPath);
     if (world) { scene.remove(world); world.geometry.dispose(); }
     suns.forEach((m) => { scene.remove(m); m.geometry.dispose(); m.material.dispose(); });
     world = buildWorld({ material, path, frames, board, posters: info, tall, aspect: innerWidth / innerHeight });
