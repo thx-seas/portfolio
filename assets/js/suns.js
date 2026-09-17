@@ -61,9 +61,9 @@ export function makeSun({ shared, center, frame, disc, outer, cell, dot, draw })
         float dots = 1.0 - smoothstep(dotR - daa, dotR + daa, dr);
         float ring = 1.0 - smoothstep(uOuter - aa, uOuter + aa, r);
 
-        // flying in, the solid disc gives way first and you pass through the halftone
-        float dist = distance(cameraPosition, uCenter);
-        float d = max(disc * smoothstep(3.0, 15.0, dist), dots * ring * smoothstep(1.0, 5.0, dist));
+        // it only gives way once its plane is right on top of the camera, by which time
+        // it has slid off the side of the frame
+        float d = max(disc * smoothstep(1.5, 8.0, vDepth), dots * ring * smoothstep(0.8, 5.0, vDepth));
         d *= (1.0 - smoothstep(uSunFogFar * 0.45, uSunFogFar, vDepth)) * uVis;
         if (d < 0.003) discard;
         gl_FragColor = vec4(d, 0.0, 0.0, 1.0);

@@ -24,8 +24,8 @@ export const F = 12;            // camera → poster plane at a stop
 export const FOV = 44;
 export const TAN0 = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 const GAP = 92;
-const YAW = [0, 0.2, -0.07, 0.17, -0.04];
-const PITCH = [0, 0.03, -0.025, 0.025, 0];
+const YAW = [0, 0.05, -0.035, 0.045, -0.02];
+const PITCH = [0, 0.015, -0.012, 0.015, 0];
 
 export function posterFrames(n) {
   const frames = [];
@@ -86,8 +86,6 @@ export function buildPath(frames, portals) {
     stopIdx.push(pts.length);
     pts.push(f.P.clone().addScaledVector(f.dir, -F));
     const O = portals[i];
-    // leave the stop still facing the poster, then bend into the disc
-    pts.push(f.P.clone().addScaledVector(f.dir, -F * 0.42).lerp(O, 0.35));
     pts.push(O.clone());
     pts.push(O.clone().addScaledVector(f.dir, 16));
   }
@@ -109,7 +107,7 @@ export function buildPath(frames, portals) {
   }
   const length = lengths[M];
   const stopS = stopIdx.map((k) => lengths[k * PER]);
-  const portalS = stopIdx.map((k) => lengths[(k + 2) * PER]);
+  const portalS = stopIdx.map((k) => lengths[(k + 1) * PER]);
 
   const at = (s, target = V()) => {
     s = clamp(s, 0, length);
